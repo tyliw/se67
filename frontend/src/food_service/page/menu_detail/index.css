@@ -1,0 +1,188 @@
+.menu-detail-layout {
+  /* position: relative; */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  .back-to-menu {
+    position: absolute;
+    top: 78px;
+    left: 16px;
+    color: #000000;
+    z-index: 1;
+  }
+}
+
+.menu-detail-container {
+  position: relative;
+  display: flex;
+  padding: 16px;
+  gap: 16px;
+  background-color: rgb(255, 255, 255);
+
+  img {
+    width: 34vw;
+    height: 54vh;
+    /* scale: 0.2; */
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .menu-detail-content {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    min-width: 460px;
+    padding: 16px;
+    /* gap: 16px; */
+    border-radius: 32px;
+    border: 2px solid #ddd;
+
+    .menu-detail-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* padding: 16px; */
+
+      .menu-detail-price {
+        margin-top: 0;
+        font-size: 22px;
+        /* text-align: center; */
+      }
+
+      .menu-detail-add-order-button {
+        padding: 12px;
+        width: 100%;
+        font-size: 22px;
+        font-weight: bold;
+
+        /* margin-left: 12rem;
+                margin-right: 12rem; */
+        border: 4px solid #133e87;
+        border-radius: 48px;
+        background-color: #133e87;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.25s, color 0.25s;
+      }
+
+      .menu-detail-add-order-button:hover {
+        background-color: #ffffff;
+        color: #133e87;
+      }
+
+      .menu-detail-add-order-button.disabled {
+        background-color: var(--button-disable); /* สีเทาเมื่อปิดการใช้งาน */
+        color: var(--color-disable);
+        cursor: not-allowed;
+        border: 4px solid var(--button-disable);
+      }
+
+      
+    }
+  }
+
+  .menu-detail-quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.menu-detail-container .menu-detail-option {
+  .option-group {
+
+    .option-group-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* align-items: center;
+      flex-wrap: wrap; */
+      padding-bottom: 16px;
+      gap: 16px;
+    }
+
+    .menu-option {
+      /* width: 180px; */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border: 3px solid #ddd;
+      border-radius: 24px;
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+      transition: background-color 0.25s, border 0.25s, color 0.25s;
+
+      span {
+        cursor: pointer;
+        color: #000;
+      }
+    }
+
+    .menu-option:hover {
+      border: 3px solid #133e87;
+      background-color: rgb(255, 255, 255);
+
+      span {
+        color: #133e87;
+      }
+    }
+
+    /* สไตล์สำหรับตัวเลือกที่ถูกเลือก */
+    .menu-option.selected {
+      border: 3px solid #133e87;
+      background-color: rgba(255, 255, 255, 0.1); /* เพิ่มพื้นหลังให้ชัดเจน */
+
+      span {
+        color: #133e87;
+      }
+    }
+  }
+}
+
+.menu-detail-quantity-control {
+  display: flex;
+  /* flex-direction: row; */
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  /* top: 50%; */
+  /* right: 0; */
+  /* background-color: #ff0000; */
+    min-width: 100px;
+}
+
+.menu-detail-minus-button, .menu-detail-plus-button {
+  /* align-self: center; */
+  /* justify-self: center; */
+  /* text-align: center; */
+  font-size: 18px;
+  /* padding: 8px; */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%; /* ให้ปุ่มกลม */
+  background-color: #133e87;
+  border: 3px solid #133e87;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+  /* ลบ margin เพื่อให้ปุ่มเรียงชิดติดกัน */
+}
+
+.menu-detail-minus-button:hover, .menu-detail-plus-button:hover {
+  background-color: #ffffff;
+  border: 3px solid #133e87;
+  color: #133e87;
+}
+
+input.menu-detail-quantity {
+  width: 30px; /* กำหนดความกว้างให้พอเหมาะ */
+  height: 30px; /* กำหนดความสูงให้พอเหมาะ */
+  margin: 0px; /* เพิ่มระยะห่างซ้ายและขวาของ input ให้มีระยะห่างเล็กน้อย */
+  font-size: 18px;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  text-align: center; /* จัดข้อความให้อยู่กึ่งกลาง */
+}
