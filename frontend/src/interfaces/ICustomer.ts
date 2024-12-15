@@ -1,4 +1,4 @@
-export interface UsersInterface {
+export interface CustomerInterface {
 
     ID?: number;
   

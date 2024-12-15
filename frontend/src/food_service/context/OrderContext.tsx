@@ -74,7 +74,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       const res = await UpdateOrderById(orderID, updatedOrder);
       if (res.status === 200) {
         setTotalAmount(totalAmount);
-        message.success("Order total amount updated successfully.");
+        // message.success("Order total amount updated successfully.");
       } else {
         message.error("Failed to update order total amount.");
       }
@@ -167,7 +167,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
     try {
       const res = await UpdateOrderDetailById(existingOrderDetail.ID!, updatedOrderDetail);
       if (res.status === 200) {
-        message.success("Updated item quantity and amount successfully.");
+        // message.success("Updated item quantity and amount successfully.");
       } else {
         message.error("Failed to update item quantity and amount.");
       }
@@ -189,7 +189,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
     const res = await CreateOrderDetail(orderDetailData);
     if (res.status === 201) {
       const newOrderDetailID = res.data.data.ID;
-      message.success(res.data.message);
+      // message.success(res.data.message);
       await handleMenuOptions(newOrder, newOrderDetailID);
     } else {
       message.error(res.data.error);
@@ -206,7 +206,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
     const res = await CreateOrderDetail(orderDetailData);
     if (res.status === 201) {
       const newOrderDetailID = res.data.data.ID;
-      message.success(res.data.message);
+      // message.success(res.data.message);
       await handleMenuOptions(newOrder, newOrderDetailID);
     } else {
       message.error(res.data.error);
@@ -224,7 +224,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       );
       const menuOptionRes = await Promise.all(promises);
       if (menuOptionRes.every((res) => res.status === 201)) {
-        message.success("Added menu options successfully.");
+        // message.success("Added menu options successfully.");
       } else {
         message.error("Failed to add some menu options.");
       }
@@ -267,7 +267,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         const createdOrderID = res.data.data.ID;
         setOrderID(createdOrderID);
         await createNewOrderDetail(newOrder, createdOrderID);
-        console.log("NEW loadData add item")
+        // console.log("NEW loadData add item")
         loadData();
       } else {
         message.error("Failed to create order.");
@@ -283,7 +283,6 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
     }
   
     // โหลดข้อมูลใหม่และอัปเดต TotalAmount
-
     await loadData();
   };
   
@@ -314,7 +313,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       const res = await UpdateOrderDetailById(OrderDetail.ID, orderDetailData);
 
       if (res.status === 200) {
-        message.success("Quantity increased successfully");
+        // message.success("Quantity increased successfully");
         await loadData();
       } else {
         message.error("Failed to update order detail");
@@ -338,7 +337,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         const res = await UpdateOrderDetailById(OrderDetail.ID, orderDetailData);
   
         if (res.status === 200) {
-          message.success("Quantity decreased successfully");
+          // message.success("Quantity decreased successfully");
           await loadData();
         } else {
           message.error("Failed to update order detail");

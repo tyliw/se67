@@ -160,7 +160,6 @@ const OrderItem: React.FC = () => {
               </table>
             </section>
 
-
           </div>
           <div className="order-summary">
             <OrderSummary subtotal={subtotal} />

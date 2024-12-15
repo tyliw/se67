@@ -1,0 +1,154 @@
+.print-icon {
+    position: absolute;
+    /* width: 6vw;
+    height: 6vh; */
+    top: 78px;
+    right: 10%;
+    /* border: 2px solid black;
+    border-radius: 50%; */
+    cursor: pointer;
+}
+
+.customer-detail-container {
+    display: flex;
+    gap: 6vw;
+
+    .customer-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        h1 {
+            color: var(--color-theme-main);
+        }
+        .customer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            
+            span {
+                font-weight: bold;
+            }
+
+            .name {
+                width: auto;
+            }
+            .address {
+                width: 10vw;
+            }
+        }
+    }
+    .receipt-detail {
+
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 4vw;
+            margin-bottom: 1.4vh;
+            
+            h1 {
+                color: var(--color-theme-main);
+            }
+
+            p {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.food-receipt-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.table-food-receipt {
+    width: 100%;
+    thead {
+        /* display: none; */
+        text-align: left;
+    }
+    
+    tbody {
+        text-align: left;
+    }
+
+    th, td {
+        padding: 16px;
+    }
+}
+
+.table-order-details {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+        text-align: center;
+        color: white;
+        background-color: var(--color-theme-main);
+    }
+
+    th, td {
+        padding: 16px;
+    }
+
+    .description {
+        text-align: left;
+        width: 60%;
+    }
+
+    .quantity {
+        text-align: center;
+    }
+
+    td.unit-price {
+        text-align: right;
+    }
+
+    .amount {
+        text-align: center;
+    }
+
+    td.amount {
+        text-align: right;
+    }
+}
+
+.table-order-details tr:nth-child(even){background-color: #f2f2f2;}
+
+.summary-container {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    padding: 16px;
+    gap: 16px;
+
+    .summary-item {
+        display: flex;
+        /* justify-content: start; */
+        /* align-items: end; */
+        gap: 1.4vw;
+
+        .header {
+            display: flex;
+            align-items: end;
+            justify-content: end;
+            width: 12vw;
+   
+        }
+
+        .detail {
+            display: flex;
+            align-items: end;
+            justify-content: end;
+            width: 4vw;
+            
+        }
+    } 
+}
+
+.description-receipt {
+    p {
+        margin-bottom: 16px;
+    }
+}

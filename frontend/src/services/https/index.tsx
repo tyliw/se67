@@ -1,4 +1,4 @@
-import { UsersInterface } from "../../interfaces/IUser";
+import { UsersInterface } from "../../interfaces/ICustomer";
 
 import { SignInInterface } from "../../interfaces/SignIn";
 
@@ -50,7 +50,7 @@ async function GetUsers() {
 }
 
 
-async function GetUsersById(id: string) {
+async function GetUsersById(id: number) {
 
   return await axios
 
@@ -63,7 +63,7 @@ async function GetUsersById(id: string) {
 }
 
 
-async function UpdateUsersById(id: string, data: UsersInterface) {
+async function UpdateUsersById(id: number, data: UsersInterface) {
 
   return await axios
 
@@ -76,7 +76,7 @@ async function UpdateUsersById(id: string, data: UsersInterface) {
 }
 
 
-async function DeleteUsersById(id: string) {
+async function DeleteUsersById(id: number) {
 
   return await axios
 

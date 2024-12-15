@@ -28,7 +28,7 @@ import {
   
   import { CreateUser } from "../../services/https";
   
-  import { UsersInterface } from "../../interfaces/IUser";
+  import { UsersInterface } from "../../interfaces/ICustomer";
   
   import logo from "../../assets/logo.png";
   

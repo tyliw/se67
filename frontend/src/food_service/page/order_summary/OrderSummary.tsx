@@ -35,7 +35,7 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
   return (
     <>
       <aside className="order-summary-container">
-        <div className="order-summary-promotion-container">
+        <section className="order-summary-promotion-container">
           <header>
             <h1>Discount</h1>
           </header>
@@ -51,8 +51,8 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
               <button onClick={handleApplyPromoCode}>Apply</button>
             </div>
           </div>
-        </div>
-        <div className="order-summary">
+        </section>
+        <section className="order-summary">
           <header>
             <h1>Order Summary</h1>
           </header>
@@ -72,7 +72,9 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
               </div>
             </div>
           </div>
-          <hr />
+        </section>
+        <hr />
+        <section className="order-summary-footer">
           <div className="order-summary-total">
             <h2>Total</h2>
             <h2>฿ {formatPrice(total.toFixed(2))}</h2>
@@ -85,7 +87,7 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
               Checkout
             </button>
           </Link>
-        </div>
+        </section>
       </aside>
     </>
   );

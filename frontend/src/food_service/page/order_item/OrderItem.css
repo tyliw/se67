@@ -6,10 +6,7 @@
 }
 
 .order-item-container {
-  display: flex;
-  justify-content: center;
   margin: auto;
-
   padding: 16px;
 
   
@@ -22,7 +19,6 @@
 }
 
 .order-item-container .order-item-detail {
-  position: relative;
   border-radius: 12px;
   padding: 16px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -37,7 +33,7 @@
 
 .order-item-order-summary-content {
   display: flex;
-  justify-content: center;
+  align-items: center;
   overflow: auto;
 
   .no-order {
@@ -67,10 +63,10 @@
         font-weight: bold;
         width: 100px;
         height: 30px;
-        border: 3px solid #133e87;
+        border: 3px solid var(--color-theme-main);
         border-radius: 50px;
         cursor: pointer;
-        color: #133e87;
+        color: var(--color-theme-main);
         background-color: white;
         transition: background-color 0.25s, color 0.25s, border-color 0.25s;
       }
@@ -80,9 +76,9 @@
       cursor: pointer;
 
       button {
-        border: 3px solid #133e87;
+        border: 3px solid var(--color-theme-main);
         color: white;
-        background-color: #133e87;
+        background-color: var(--color-theme-main);
       }
     }
   }
@@ -137,7 +133,7 @@
         /* border: 2px solid #666; */
         border-radius: 50px;
         background-color: #CBDCEB;
-        color: #133e87;
+        color: var(--color-theme-main);
       }
 
 
@@ -182,9 +178,9 @@
   height: max(1.6vw, 30px); /* ความกว้างอิงหน้าจอ */
   font-size: max(1vw, 18px);
   border-radius: 50%;
-  background-color: #133e87;
+  background-color: var(--color-theme-main);
   color: white;
-  border: 3px solid #133e87;
+  border: 3px solid var(--color-theme-main);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,8 +191,8 @@
 .order-item-minus-button:hover,
 .order-item-plus-button:hover {
   background-color: #ffffff;
-  border: 3px solid #133e87;
-  color: #133e87;
+  border: 3px solid var(--color-theme-main);
+  color: var(--color-theme-main);
 }
 
 input.order-item-quantity {
@@ -212,12 +208,21 @@ input.order-item-quantity {
 @media only screen and (max-width: 1000px) {
   .order-item-container {
     width: 100%;
-    /* background-color: #133e87; */
+    /* background-color: var(--color-theme-main); */
     
     .order-card {
       display: flex;
       flex-direction: column;
       width: 100%;
     }
+  }
+  
+  .order-item-order-summary-content {
+    width: 100%;
+  }
+
+  .table-order-item {
+    width: 100%;
+    max-width: 100%;
   }
 }

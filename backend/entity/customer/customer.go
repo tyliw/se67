@@ -10,21 +10,21 @@ type Customer struct {
 
    gorm.Model
 
-   FirstName string    `json:"first_name"`
+   FirstName string
 
-   LastName  string    `json:"last_name"`
+   LastName  string
 
-   Email     string    `json:"email"`
+   Email     string
 
-   Age       uint8     `json:"age"`
+   Age       uint8
 
    Password  string    `json:"-"`
 
-   BirthDay  time.Time `json:"birthday"`
+   BirthDay  time.Time
 
-   GenderID  uint      `json:"gender_id"`
+   GenderID  uint
 
-   Gender    *Genders  `gorm:"foreignKey: gender_id" json:"gender"`
+   Gender    *Genders  `gorm:"foreignKey: gender_id"`
 
-   PhoneNumber string  `json:"phone_number"`
+   PhoneNumber string
 }

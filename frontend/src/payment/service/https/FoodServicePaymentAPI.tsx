@@ -22,7 +22,7 @@ async function GetFoodServicePayment() {
     .catch((e) => e.response);
 }
 
-async function GetFoodServicePaymentById(id: string) {
+async function GetFoodServicePaymentById(id: number) {
   return await axios
     .get(`${apiUrl}/foodservicepayment/${id}`, requestOptions)
     .then((res) => res)
@@ -36,14 +36,14 @@ async function CreateFoodServicePayment(data: FoodServicePaymentInterface) {
     .catch((e) => e.response);
 }
 
-async function UpdateFoodServicePaymentById(id: string, data: FoodServicePaymentInterface) {
+async function UpdateFoodServicePaymentById(id: number, data: FoodServicePaymentInterface) {
   return await axios
     .put(`${apiUrl}/foodservicepayment/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
-async function DeleteFoodServicePaymentById(id: string) {
+async function DeleteFoodServicePaymentById(id: number) {
   return await axios
     .delete(`${apiUrl}/foodservicepayment/${id}`, requestOptions)
     .then((res) => res)
