@@ -8,7 +8,7 @@ import (
 
    "project-se67/config"
 
-   "project-se67/entity/customer"
+   "project-se67/entity"
 
    "github.com/gin-gonic/gin"
 
@@ -21,7 +21,7 @@ func GetAll(c *gin.Context) {
    db := config.DB()
 
 
-   var genders []customer.Genders
+   var genders []entity.Genders
 
    db.Find(&genders)
 

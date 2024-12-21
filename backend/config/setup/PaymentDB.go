@@ -2,7 +2,7 @@ package setup
 
 import (
 	"fmt"
-	"project-se67/entity/payment"
+	"project-se67/entity"
 	"time"
 	"gorm.io/gorm"
 )
@@ -10,12 +10,12 @@ import (
 func SetupPaymentDatabase(db *gorm.DB) {
 	// Auto-migrate tables
 	db.AutoMigrate(
-		&payment.TripPayment{},
-		&payment.FoodServicePayment{},
+		&entity.TripPayment{},
+		&entity.FoodServicePayment{},
 	)
 
 	// Create sample TripPayment
-	tripPayment := payment.TripPayment{
+	tripPayment := entity.TripPayment{
 		PaymentDate:   time.Now(),
 		TotalPrice:    100.0,
 		PaymentStatus: "succeeded",
@@ -25,7 +25,7 @@ func SetupPaymentDatabase(db *gorm.DB) {
 	db.FirstOrCreate(&tripPayment)
 
 	// Create sample FoodServicePayment linked to Order and TripPayment
-	foodServicePayment := payment.FoodServicePayment{
+	foodServicePayment := entity.FoodServicePayment{
 		PaymentDate:   time.Now(),
 		Price:         370,
 		PaymentStatus: "succeeded",

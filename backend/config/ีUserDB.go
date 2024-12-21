@@ -4,7 +4,7 @@ import (
 	"fmt"
 	// "project-se67/config"
 	// "project-se67/config"
-	"project-se67/entity/customer"
+	"project-se67/entity"
 	"time"
 
 	// "gorm.io/gorm"
@@ -15,28 +15,28 @@ func SetupUserDatabase() {
 
 	db.AutoMigrate(
  
-		&customer.Customer{},
+		&entity.Customers{},
  
-		&customer.Genders{},
+		&entity.Genders{},
  
 	)
  
  
-	GenderMale := customer.Genders{Gender: "Male"}
+	GenderMale := entity.Genders{Gender: "Male"}
  
-	GenderFemale := customer.Genders{Gender: "Female"}
+	GenderFemale := entity.Genders{Gender: "Female"}
  
  
-	db.FirstOrCreate(&GenderMale, &customer.Genders{Gender: "Male"})
+	db.FirstOrCreate(&GenderMale, &entity.Genders{Gender: "Male"})
  
-	db.FirstOrCreate(&GenderFemale, &customer.Genders{Gender: "Female"})
+	db.FirstOrCreate(&GenderFemale, &entity.Genders{Gender: "Female"})
  
  
 	hashedPassword, _ := HashPassword("123")
  
 	BirthDay, _ := time.Parse("2006-01-02", "1988-11-12")
  
-	User := &customer.Customer{
+	User := &entity.Customers{
  
 		FirstName: "Software",
  
@@ -56,7 +56,7 @@ func SetupUserDatabase() {
  
 	}
  
-	db.FirstOrCreate(User, &customer.Customer{
+	db.FirstOrCreate(User, &entity.Customers{
  
 		Email: "sa@gmail.com",
  

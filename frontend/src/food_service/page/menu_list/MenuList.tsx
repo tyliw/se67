@@ -74,7 +74,7 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
                         <h1 className="menu-name">{item.MenuName}</h1>
                         <h1 className="menu-price">฿ {formatPrice(item.Price)}</h1>
                       </header>
-                      <p>{item.Description}</p>
+                      {/* <p>{item.Description}</p> */}
                     </div>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 .menu-list-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 30px;
   width: 100%;
   /* top: 32px; */
@@ -48,13 +48,13 @@
     header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: start;
 
       padding-bottom: 8px;
 
       .menu-name {
         display: -webkit-box;
-        -webkit-line-clamp: 1; /* จำนวนบรรทัดที่ต้องการแสดง */
+        -webkit-line-clamp: 2; /* จำนวนบรรทัดที่ต้องการแสดง */
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;

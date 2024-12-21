@@ -3,13 +3,13 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllOrderDetails(c *gin.Context) {
-	var orderDetails []food_service.OrderDetail
+	var orderDetails []entity.OrderDetails
 	db := config.DB()
 
 	if err := db.Preload("Menu").Preload("Order").Find(&orderDetails).Error; err != nil {
@@ -22,7 +22,7 @@ func GetAllOrderDetails(c *gin.Context) {
 
 func GetOrderDetail(c *gin.Context) {
 	ID := c.Param("id")
-	var orderDetail food_service.OrderDetail
+	var orderDetail entity.OrderDetails
 	db := config.DB()
 
 	if err := db.Preload("Menu").Preload("Order").First(&orderDetail, ID).Error; err != nil {
@@ -34,7 +34,7 @@ func GetOrderDetail(c *gin.Context) {
 }
 
 func CreateOrderDetail(c *gin.Context) {
-	var orderDetail food_service.OrderDetail
+	var orderDetail entity.OrderDetails
 	db := config.DB()
 
 	// Bind JSON request body to orderDetail struct
@@ -54,7 +54,7 @@ func CreateOrderDetail(c *gin.Context) {
 
 
 func UpdateOrderDetail(c *gin.Context) {
-	var orderDetail food_service.OrderDetail
+	var orderDetail entity.OrderDetails
 	db := config.DB()
 
 	if err := db.First(&orderDetail, c.Param("id")).Error; err != nil {
@@ -76,13 +76,13 @@ func DeleteOrderDetail(c *gin.Context) {
 	db := config.DB()
 
 	// ลบข้อมูลจากตาราง OrderDetailMenuOption ที่มี OrderDetailID ตรงกับ id
-	if err := db.Where("order_detail_id = ?", id).Delete(&food_service.OrderDetailMenuOption{}).Error; err != nil {
+	if err := db.Where("order_detail_id = ?", id).Delete(&entity.OrderDetailMenuOptions{}).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete related menu options"})
 		return
 	}
 
 	// ลบข้อมูลจากตาราง OrderDetail
-	if tx := db.Delete(&food_service.OrderDetail{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.OrderDetails{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

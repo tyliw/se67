@@ -1,4 +1,4 @@
-package booking_cabin
+package entity
 
 import "gorm.io/gorm"
 

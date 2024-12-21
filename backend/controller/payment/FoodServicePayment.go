@@ -3,13 +3,13 @@ package payment
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/payment"
+	"project-se67/entity"
 	// "project-se67/entity/food_service"
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllFoodServicePayments(c *gin.Context) {
-	var payments []payment.FoodServicePayment
+	var payments []entity.FoodServicePayment
 	db := config.DB()
 
 	if err := db.Preload("Order").Preload("TripPayment").Find(&payments).Error; err != nil {
@@ -22,7 +22,7 @@ func GetAllFoodServicePayments(c *gin.Context) {
 
 func GetFoodServicePayment(c *gin.Context) {
 	ID := c.Param("id")
-	var foodPayment payment.FoodServicePayment
+	var foodPayment entity.FoodServicePayment
 	db := config.DB()
 
 	if err := db.Preload("Order").Preload("TripPayment").First(&foodPayment, ID).Error; err != nil {
@@ -34,7 +34,7 @@ func GetFoodServicePayment(c *gin.Context) {
 }
 
 func CreateFoodServicePayment(c *gin.Context) {
-	var foodPayment payment.FoodServicePayment
+	var foodPayment entity.FoodServicePayment
 	if err := c.ShouldBindJSON(&foodPayment); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
 		return
@@ -50,7 +50,7 @@ func CreateFoodServicePayment(c *gin.Context) {
 }
 
 func UpdateFoodServicePayment(c *gin.Context) {
-	var foodPayment payment.FoodServicePayment
+	var foodPayment entity.FoodServicePayment
 	db := config.DB()
 
 	if err := db.First(&foodPayment, c.Param("id")).Error; err != nil {
@@ -71,7 +71,7 @@ func DeleteFoodServicePayment(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&payment.FoodServicePayment{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.FoodServicePayment{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

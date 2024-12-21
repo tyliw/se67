@@ -1,7 +1,6 @@
-package payment
+package entity
 
 import (
-	"project-se67/entity/food_service"
 	"time"
 	"gorm.io/gorm"
 )
@@ -15,7 +14,7 @@ type FoodServicePayment struct {
 	
 	// OrderID ทำหน้าที่เป็น FK
 	OrderID 		uint
-	Order   		*food_service.Order `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE;"`
+	Order   		*Orders `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE;"`
 
 	// TripPaymentID ทำหน้าที่เป็น FK
 	TripPaymentID 	uint

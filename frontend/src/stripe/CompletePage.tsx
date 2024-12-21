@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   useStripe,
 } from "@stripe/react-stripe-js";
@@ -11,7 +11,13 @@ import { OrderInterface } from "../food_service/interface/IOrder";
 import { UpdateOrderById } from "../food_service/service/https/OrderAPI";
 import FoodReceipt from "../payment/page/receipt/FoodReceipt";
 import "./CompletePage.css"
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useReactToPrint } from "react-to-print";
+import { MdLocalPrintshop } from "react-icons/md";
+import { MdFileDownload } from "react-icons/md";
+
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const SuccessIcon =
   <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,21 +59,18 @@ const STATUS_CONTENT_MAP = {
   }
 };
 
+
 // const stripePromise = loadStripe("pk_test_51QOxoF4QmAAjQ0QzsimUKy0RcgMxNPvfbmCm6OJurQzEGULD1u2OfTSGfdd0OwpEW0tzpdkQvmQSZKvbq9waUceD00PaT9sjdJ");
 
 export default function CompletePage() {
   const stripe = useStripe();
-  const navigate = useNavigate();
-  const { orderID } = useOrder();
+  const {  orderID } = useOrder();
+  // const navigate = useNavigate();
+
   
   const [status, setStatus] = useState<string>("processing");
   const [intentId, setIntentId] = useState(String);
   const [, setAmount] = useState(Number);
-  const [, setFoodServicePayment] = useState<FoodServicePaymentInterface[]>([]);
-
-  // useEffect(() => {
-  //   localStorage.setItem("foodServicePayment", JSON.stringify(foodServicePayment));
-  // }, [foodServicePayment]);
 
   useEffect(() => {
     if (!stripe) return;
@@ -121,12 +124,9 @@ export default function CompletePage() {
       const updateOrderData: OrderInterface = {
         OrderDate: new Date(),
         Status: "Paid",
-
       };
       const resOrder = await UpdateOrderById(order_id, updateOrderData);
       if (resOrder.status === 200) {
-        setFoodServicePayment(resFood.data);
-        console.log("resFood.data CreateFoodServicePayment", resFood.data)
         // Store resFood in localStorage
         localStorage.setItem("foodServicePaymentID", JSON.stringify(resFood.data.ID));
       } else {
@@ -139,35 +139,17 @@ export default function CompletePage() {
     }
   };
 
-  const BackToHome = async () => {
-    localStorage.removeItem("foodServicePaymentID");
-    navigate("/login/food-service/order");
-  };
+
   
   return (
-    <div className="payment-status-container">
-      <div  id="payment-status">
-        <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}}>
+    <div className="payment-status-container" >
+      
+      <div id="payment-status" >
+        <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}} >
           {STATUS_CONTENT_MAP[status].icon}
         </div>
         <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
-        {intentId && <div id="details-table">
-          {/* <table>
-            <tbody>
-              <tr>
-                <td className="TableLabel">id</td>
-                <td id="intent-id" className="TableContent">{intentId}</td>
-              </tr>
-              <tr>
-                <td className="TableLabel">status</td>
-                <td id="intent-status" className="TableContent">{status}</td>
-              </tr>
-              <tr>
-                <td className="TableLabel">amount</td>
-                <td id="intent-id" className="TableContent">{amount}</td>
-              </tr>
-            </tbody>
-          </table> */}
+        {intentId && status == "succeeded" && <div id="details-table" >
           <section>
             <FoodReceipt></FoodReceipt>
           </section>
@@ -178,7 +160,14 @@ export default function CompletePage() {
             <path d="M8.66672 0C8.18347 0 7.79172 0.391751 7.79172 0.875C7.79172 1.35825 8.18347 1.75 8.66672 1.75H11.5126L4.83967 8.42295C4.49796 8.76466 4.49796 9.31868 4.83967 9.66039C5.18138 10.0021 5.7354 10.0021 6.07711 9.66039L12.7501 2.98744V5.83333C12.7501 6.31658 13.1418 6.70833 13.6251 6.70833C14.1083 6.70833 14.5001 6.31658 14.5001 5.83333V0.875C14.5001 0.391751 14.1083 0 13.6251 0H8.66672Z" fill="#0055DE"/>
             </svg>
         </a>} */}
-        <button id="retry-button" onClick={() => BackToHome()}>Back to home</button>
+        {/* <button id="retry-button" onClick={() => BackToHome()}>Back to home</button> */}
+        {/* {status == "succeeded" ? (
+          
+        ): (
+          <></>
+        )} */}
+
+        <a id="retry-button" href="/login/food-service/order">BACK TO HOME</a>
       </div>
     </div>
   );

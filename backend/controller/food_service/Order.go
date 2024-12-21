@@ -3,13 +3,13 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllOrders(c *gin.Context) {
-	var orders []food_service.Order
+	var orders []entity.Orders
 	db := config.DB()
 
 	if err := db.Preload("Customer").Find(&orders).Error; err != nil {
@@ -22,7 +22,7 @@ func GetAllOrders(c *gin.Context) {
 
 func GetOrder(c *gin.Context) {
 	ID := c.Param("id")
-	var order food_service.Order
+	var order entity.Orders
 	db := config.DB()
 
 	if err := db.Preload("Customer").First(&order, ID).Error; err != nil {
@@ -34,7 +34,7 @@ func GetOrder(c *gin.Context) {
 }
 
 func CreateOrder(c *gin.Context) {
-	var order food_service.Order
+	var order entity.Orders
 	db := config.DB()
 
 	// Bind JSON request body to order struct
@@ -54,7 +54,7 @@ func CreateOrder(c *gin.Context) {
 
 
 func UpdateOrder(c *gin.Context) {
-	var order food_service.Order
+	var order entity.Orders
 	db := config.DB()
 
 	if err := db.First(&order, c.Param("id")).Error; err != nil {
@@ -75,7 +75,7 @@ func DeleteOrder(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&food_service.Order{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.Orders{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

@@ -3,14 +3,14 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 
 	"github.com/gin-gonic/gin"
 )
 
 // GetAllOrderDetailMenuOptions retrieves all OrderDetailMenuOption entries
 func GetAllOrderDetailMenuOptions(c *gin.Context) {
-	var orderDetailMenuOptions []food_service.OrderDetailMenuOption
+	var orderDetailMenuOptions []entity.OrderDetailMenuOptions
 	db := config.DB()
 
 	if err := db.Preload("OrderDetail").Preload("MenuItemOption").Find(&orderDetailMenuOptions).Error; err != nil {
@@ -24,7 +24,7 @@ func GetAllOrderDetailMenuOptions(c *gin.Context) {
 // GetOrderDetailMenuOption retrieves a specific OrderDetailMenuOption by ID
 func GetOrderDetailMenuOption(c *gin.Context) {
 	ID := c.Param("id")
-	var orderDetailMenuOption food_service.OrderDetailMenuOption
+	var orderDetailMenuOption entity.OrderDetailMenuOptions
 	db := config.DB()
 
 	if err := db.Preload("OrderDetail").Preload("MenuItemOption").First(&orderDetailMenuOption, ID).Error; err != nil {
@@ -37,7 +37,7 @@ func GetOrderDetailMenuOption(c *gin.Context) {
 
 // CreateOrderDetailMenuOption creates a new OrderDetailMenuOption entry
 func CreateOrderDetailMenuOption(c *gin.Context) {
-	var orderDetailMenuOption food_service.OrderDetailMenuOption
+	var orderDetailMenuOption entity.OrderDetailMenuOptions
 	db := config.DB()
 
 	if err := c.ShouldBindJSON(&orderDetailMenuOption); err != nil {
@@ -56,7 +56,7 @@ func CreateOrderDetailMenuOption(c *gin.Context) {
 // UpdateOrderDetailMenuOption updates an existing OrderDetailMenuOption entry
 func UpdateOrderDetailMenuOption(c *gin.Context) {
 	ID := c.Param("id")
-	var orderDetailMenuOption food_service.OrderDetailMenuOption
+	var orderDetailMenuOption entity.OrderDetailMenuOptions
 	db := config.DB()
 
 	if err := db.First(&orderDetailMenuOption, ID).Error; err != nil {
@@ -82,7 +82,7 @@ func DeleteOrderDetailMenuOption(c *gin.Context) {
 	ID := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&food_service.OrderDetailMenuOption{}, ID); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.OrderDetailMenuOptions{}, ID); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "OrderDetailMenuOption not found"})
 		return
 	}

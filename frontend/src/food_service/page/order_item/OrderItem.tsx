@@ -47,7 +47,7 @@ const OrderItem: React.FC = () => {
   return (
     <>
       <div className="order-item-container">
-        <Link to={"/login/food-service/order"} style={{ color: "black" }}>
+        <Link to={"/login/food-service/order"}>
           <IoChevronBackSharp size={30} className="back-to-menu" />
         </Link>
         <div className="order-card">
@@ -58,6 +58,15 @@ const OrderItem: React.FC = () => {
             </header>
             <section className="order-item-order-summary-content">
               <table className="table-order-item">
+                {/* <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Title</th>
+                    <th>Option</th>
+                    <th>Amount</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead> */}
                 {filteredOrderDetails.length > 0 ? (
                   <tbody>
                     {filteredOrderDetails.map((item) => {
@@ -76,7 +85,7 @@ const OrderItem: React.FC = () => {
                           <td>
                             <div className="order-item-menu-detail">
                               <h1>{item.Menu?.MenuName}</h1>
-                              <p>{item.Menu?.Description}</p>
+                              {/* <p>{item.Menu?.Description}</p> */}
                             </div>
                           </td>
                           <td>
@@ -124,7 +133,7 @@ const OrderItem: React.FC = () => {
                             </div>
                           </td>
                           <td>
-                            <div>
+                            <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
                               <MdCancel
                                 className="cancel-icon"
                                 color="aaa"

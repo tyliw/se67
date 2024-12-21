@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./StripeCheckout.css";
+import { IoChevronBackSharp } from "react-icons/io5";
+import Spinner from "../components/spinner";
 // import { useFoodServicePayment } from "../payment/context/FoodServicePaymentContext";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
@@ -16,7 +18,6 @@ export default function StripeCheckout() {
   const [dpmCheckerLink, setDpmCheckerLink] = useState("");
   const location = useLocation();
   const { total } = location.state || {};
-  console.log("StripeCheckout total",total)
   // const { setFoodServicePaymentID, foodServicePaymentID } = useFoodServicePayment();
 
   useEffect(() => {
@@ -41,16 +42,24 @@ export default function StripeCheckout() {
   }, []);
 
   return (
-    <div className="StripeCheckout">
+    <>
+    <div className="stripe-checkout">
+
       {clientSecret ? (
-        <Elements options={{ clientSecret }} stripe={stripePromise}>
-          <CheckoutForm dpmCheckerLink={dpmCheckerLink} total={total}/>
-        </Elements>
+        <>
+          <Link to={"/login/food-service/order-summary"}>
+            <IoChevronBackSharp size={30} className="back-to-menu" />
+          </Link>
+          <Elements options={{ clientSecret }} stripe={stripePromise}>
+            <CheckoutForm dpmCheckerLink={dpmCheckerLink} total={total}/>
+          </Elements>
+        </>
       ) : (
-        <div className="loading-container">
-          <div className="spinner"></div>
+        <div style={{width: "100vw", height: "70vh"}}>
+          <Spinner/>
         </div>
       )}
     </div>
+    </>
   );
 }

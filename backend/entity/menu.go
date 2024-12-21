@@ -1,17 +1,19 @@
-package food_service
+package entity
 
 import (
 	"gorm.io/gorm"
  )
  
- type Menu struct {
+ type Menus struct {
 	gorm.Model
 	MenuName 	string
-	Price 		float32
+	Price 		float64
 	Description string
 	ImageMenu   string 	`gorm:"type:longtext"`
 
 	// FoodCategoryID ทำหน้าที่เป็น FK
 	FoodCategoryID 		uint
-	FoodCategory    	*FoodCategory  `gorm:"foreignKey: FoodCategoryID"`
+	FoodCategory    	*FoodCategories  `gorm:"foreignKey: FoodCategoryID"`
+
+	MenuOptions []*MenuOptions `gorm:"many2many:menu_item_options;"`
  }

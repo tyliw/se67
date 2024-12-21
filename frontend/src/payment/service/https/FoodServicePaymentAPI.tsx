@@ -17,35 +17,35 @@ const requestOptions = {
 
 async function GetFoodServicePayment() {
   return await axios
-    .get(`${apiUrl}/foodservicepayments`, requestOptions)
+    .get(`${apiUrl}/food-service-payments`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function GetFoodServicePaymentById(id: number) {
   return await axios
-    .get(`${apiUrl}/foodservicepayment/${id}`, requestOptions)
+    .get(`${apiUrl}/food-service-payment/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function CreateFoodServicePayment(data: FoodServicePaymentInterface) {
   return await axios
-    .post(`${apiUrl}/foodservicepayment`, data, requestOptions)
+    .post(`${apiUrl}/food-service-payment`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function UpdateFoodServicePaymentById(id: number, data: FoodServicePaymentInterface) {
   return await axios
-    .put(`${apiUrl}/foodservicepayment/${id}`, data, requestOptions)
+    .put(`${apiUrl}/food-service-payment/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function DeleteFoodServicePaymentById(id: number) {
   return await axios
-    .delete(`${apiUrl}/foodservicepayment/${id}`, requestOptions)
+    .delete(`${apiUrl}/food-service-payment/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }

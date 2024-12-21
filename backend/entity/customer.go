@@ -1,4 +1,4 @@
-package customer
+package entity
 
 
 import (
@@ -6,7 +6,7 @@ import (
    "gorm.io/gorm"
 )
 
-type Customer struct {
+type Customers struct {
 
    gorm.Model
 

@@ -11,7 +11,7 @@ import (
 
    "project-se67/config"
 
-   "project-se67/entity/customer"
+   "project-se67/entity"
 
 )
 
@@ -19,7 +19,7 @@ import (
 func GetAll(c *gin.Context) {
 
 
-   var users []customer.Customer
+   var users []entity.Customers
 
 
    db := config.DB()
@@ -45,7 +45,7 @@ func Get(c *gin.Context) {
 
    ID := c.Param("id")
 
-   var user customer.Customer
+   var user entity.Customers
 
 
    db := config.DB()
@@ -77,7 +77,7 @@ func Get(c *gin.Context) {
 func Update(c *gin.Context) {
 
 
-   var user customer.Customer
+   var user entity.Customers
 
 
    UserID := c.Param("id")

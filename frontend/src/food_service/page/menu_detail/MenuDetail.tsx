@@ -5,7 +5,7 @@ import { message } from "antd";
 // import { Order, useOrder } from "../../context/OrderContext";
 import { MenuItemOptionInterface } from "../../interface/IMenuItemOption";
 import { IoChevronBackSharp } from "react-icons/io5";
-import "./index.css";
+import "./MenuDetail.css";
 import { Order, useOrder } from "../../context/OrderContext";
 
 const MenuDetail: React.FC = () => {
@@ -18,7 +18,7 @@ const MenuDetail: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, MenuItemOptionInterface>>({});
   const [messageApi] = message.useMessage();
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  // const [success, setSuccess] = useState<boolean>(false);
 
   const getMenuItemOption = async () => {
     const res = await GetMenuItemOptions();
@@ -26,27 +26,30 @@ const MenuDetail: React.FC = () => {
       setMenuItemOptions(res.data);
     } else {
       setMenuItemOptions([]);
-      setError(res.data.error);
-    }
-  };
-
-  useEffect(() => {
-    if (error) {
       messageApi.open({
         type: "error",
         content: error,
       });
     }
-  }, [error, messageApi]);
+  };
 
-  useEffect(() => {
-    if (success) {
-      messageApi.open({
-        type: "success",
-        content: "Order has been added successfully!",
-      });
-    }
-  }, [success, messageApi]);
+  // useEffect(() => {
+  //   if (error) {
+  //     messageApi.open({
+  //       type: "error",
+  //       content: error,
+  //     });
+  //   }
+  // }, [error, messageApi]);
+
+  // useEffect(() => {
+  //   if (success) {
+  //     messageApi.open({
+  //       type: "success",
+  //       content: "Order has been added successfully!",
+  //     });
+  //   }
+  // }, [success, messageApi]);
 
   const filteredOptions = menuItemOptions.filter(
     (option) => option.MenuID === menuDetailSelect?.ID
@@ -100,14 +103,30 @@ const MenuDetail: React.FC = () => {
       SelectedOptions: selectedOptions,
       Amount: amount * quantity, // Total price for this order
     };
-    console.log("selectedOptions: ",selectedOptions)
+
     addItem(orderData);
-    setSuccess(true);
+    // setSuccess(true);
   };
 
   useEffect(() => {
     getMenuItemOption();
   }, []);
+
+  useEffect(() => {
+    if (menuItemOptions.length > 0) {
+      const defaultSelectedOptions: Record<string, MenuItemOptionInterface> = {};
+  
+      // Iterate through groupedOptions to set the first option of each group
+      for (const optionName in groupedOptions) {
+        if (groupedOptions[optionName].length > 0) {
+          defaultSelectedOptions[optionName] = groupedOptions[optionName][0];
+        }
+      }
+  
+      setSelectedOptions(defaultSelectedOptions);
+    }
+  }, [menuItemOptions]);
+  
 
   // Check if all groups have selected options
   const isButtonDisabled = Object.keys(groupedOptions).some(
@@ -123,21 +142,20 @@ const MenuDetail: React.FC = () => {
 
   return (
     <div className="menu-detail-layout">
-      <Link to={"/login/food-service/order"}>
-        <IoChevronBackSharp 
-          size={30}
-          className="back-to-menu"
-        />
-      </Link>
+        <Link to={"/login/food-service/order"}>
+          <IoChevronBackSharp size={30} className="back-to-menu" />
+        </Link>
       <section className="menu-detail-container">
-        <div>
-
+        <div className="menu-detail">
           <img src={menuDetailSelect?.ImageMenu} alt={menuDetailSelect.MenuName} />
-            <div className="menu-detail-info">
-              <h1>{menuDetailSelect?.MenuName}</h1>
-              <hr />
+          <div className="menu-detail-info">
+            <h1>{menuDetailSelect?.MenuName}</h1>
+            <hr />
+            <div>
+              <p style={{marginBottom:"4px"}}>Description</p>
               <p>{menuDetailSelect?.Description}</p>
             </div>
+          </div>
         </div>
 
         <div className="menu-detail-content-container">
@@ -146,9 +164,9 @@ const MenuDetail: React.FC = () => {
             <div className="menu-detail-option">
               {Object.keys(groupedOptions).map((optionName) => (
                 <div key={optionName} className="option-group">
-                  <h2>{optionName}</h2>
+                  <h1>{optionName}</h1>
                   <div className="option-group-content">
-                    {groupedOptions[optionName].map((option) => (
+                    {groupedOptions[optionName].map((option, index) => (
                       <label key={option.ID} style={{width:"auto"}}>
                         <div
                           className={`menu-option ${
@@ -165,6 +183,7 @@ const MenuDetail: React.FC = () => {
                           />
                           <span className="option-value">
                             {option.MenuOption?.OptionValue}
+                            {index === 0 && <span style={{ color: "var(--color-disable)", marginLeft: "4px" }}>(Default)</span>}
                           </span>
                           <span className="option-extra-price">
                             + {option.MenuOption?.ExtraPrice} ฿
@@ -177,7 +196,7 @@ const MenuDetail: React.FC = () => {
               ))}
             </div>
 
-            <section>
+            <section className="menu-detail-footer">
               <div className="menu-detail-quantity-container">
                 <h1>Quantity</h1>
                 <div className="menu-detail-quantity-control">
@@ -202,7 +221,7 @@ const MenuDetail: React.FC = () => {
                 </div>
               </div>
 
-              <div className="menu-detail-footer">
+              <div className="menu-detail-button-container">
                 {/* <h1 className="menu-detail-price">฿ {menuDetailSelect?.Price}</h1> */}
               
                 <Link to="/login/food-service/order" style={{ width: "auto" }}>

@@ -3,12 +3,12 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllFoodCategories(c *gin.Context) {
-	var categories []food_service.FoodCategory
+	var categories []entity.FoodCategories
 	db := config.DB()
 
 	if err := db.Find(&categories).Error; err != nil {
@@ -21,7 +21,7 @@ func GetAllFoodCategories(c *gin.Context) {
 
 func GetFoodCategory(c *gin.Context) {
 	ID := c.Param("id")
-	var category food_service.FoodCategory
+	var category entity.FoodCategories
 	db := config.DB()
 
 	if err := db.First(&category, ID).Error; err != nil {
@@ -33,7 +33,7 @@ func GetFoodCategory(c *gin.Context) {
 }
 
 func CreateFoodCategory(c *gin.Context) {
-	var category food_service.FoodCategory
+	var category entity.FoodCategories
 	db := config.DB()
 
 	// Bind JSON request body to category struct
@@ -53,7 +53,7 @@ func CreateFoodCategory(c *gin.Context) {
 
 
 func UpdateFoodCategory(c *gin.Context) {
-	var category food_service.FoodCategory
+	var category entity.FoodCategories
 	db := config.DB()
 
 	if err := db.First(&category, c.Param("id")).Error; err != nil {
@@ -74,7 +74,7 @@ func DeleteFoodCategory(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&food_service.FoodCategory{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.FoodCategories{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

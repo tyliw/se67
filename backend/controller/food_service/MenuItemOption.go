@@ -3,13 +3,13 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 	"github.com/gin-gonic/gin"
 )
 
 // GetAllMenuItemOptions - ดึงข้อมูล MenuItemOption ทั้งหมด
 func GetAllMenuItemOptions(c *gin.Context) {
-	var menuItemOptions []food_service.MenuItemOption
+	var menuItemOptions []entity.MenuItemOptions
 	db := config.DB()
 
 	if err := db.Preload("Menu").Preload("MenuOption").Find(&menuItemOptions).Error; err != nil {
@@ -22,7 +22,7 @@ func GetAllMenuItemOptions(c *gin.Context) {
 
 func GetMenuItemOption(c *gin.Context) {
 	ID := c.Param("id")
-	var menuItemOptions []food_service.MenuItemOption
+	var menuItemOptions []entity.MenuItemOptions
 	db := config.DB()
 
 	if err := db.Preload("Menu").Preload("MenuOption").Find(&menuItemOptions, ID).Error; err != nil {
@@ -35,7 +35,7 @@ func GetMenuItemOption(c *gin.Context) {
 
 // CreateMenuItemOption - สร้าง MenuItemOption ใหม่
 func CreateMenuItemOption(c *gin.Context) {
-	var menuItemOption food_service.MenuItemOption
+	var menuItemOption entity.MenuItemOptions
 	if err := c.ShouldBindJSON(&menuItemOption); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
 		return
@@ -55,7 +55,7 @@ func DeleteMenuItemOption(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&food_service.MenuItemOption{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.MenuItemOptions{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

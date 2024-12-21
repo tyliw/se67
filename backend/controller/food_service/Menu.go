@@ -3,13 +3,13 @@ package food_service
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllMenus(c *gin.Context) {
-	var menus []food_service.Menu
+	var menus []entity.Menus
 	db := config.DB()
 
 	if err := db.Preload("FoodCategory").Find(&menus).Error; err != nil {
@@ -22,7 +22,7 @@ func GetAllMenus(c *gin.Context) {
 
 func GetMenu(c *gin.Context) {
 	ID := c.Param("id")
-	var menu food_service.Menu
+	var menu entity.Menus
 	db := config.DB()
 
 	if err := db.Preload("FoodCategory").First(&menu, ID).Error; err != nil {
@@ -34,7 +34,7 @@ func GetMenu(c *gin.Context) {
 }
 
 func CreateMenu(c *gin.Context) {
-	var menu food_service.Menu
+	var menu entity.Menus
 	db := config.DB()
 
 	// Bind JSON request body to menu struct
@@ -54,7 +54,7 @@ func CreateMenu(c *gin.Context) {
 
 
 func UpdateMenu(c *gin.Context) {
-	var menu food_service.Menu
+	var menu entity.Menus
 	db := config.DB()
 
 	if err := db.First(&menu, c.Param("id")).Error; err != nil {
@@ -75,7 +75,7 @@ func DeleteMenu(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&food_service.Menu{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.Menus{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

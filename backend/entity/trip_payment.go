@@ -1,7 +1,6 @@
-package payment
+package entity
 
 import (
-	"project-se67/entity/booking_cabin"
 	"time"
 
 	"gorm.io/gorm"
@@ -16,5 +15,5 @@ type TripPayment struct {
 
 	
 	BookingCabinID uint
-	BookingCabin	*booking_cabin.BookingCabin `gorm:"foreignKey:BookingCabinID;constraint:OnDelete:CASCADE;"`
+	BookingCabin	*BookingCabin `gorm:"foreignKey:BookingCabinID;constraint:OnDelete:CASCADE;"`
 }

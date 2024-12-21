@@ -2,9 +2,8 @@ package setup
 
 import (
 	"fmt"
-	"project-se67/entity/food_service"
+	"project-se67/entity"
 	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -12,16 +11,16 @@ import (
 func SetupFoodServiceDatabase(db *gorm.DB) {
 	// Auto-migrate tables
 	db.AutoMigrate(
-		&food_service.FoodCategory{},
-		&food_service.Menu{},
-		&food_service.MenuOption{},
-		&food_service.MenuItemOption{},
-		&food_service.Order{},
-		&food_service.OrderDetail{},
-		&food_service.OrderDetailMenuOption{},
+		&entity.FoodCategories{},
+		&entity.Menus{},
+		&entity.MenuOptions{},
+		&entity.MenuItemOptions{},
+		&entity.Orders{},
+		&entity.OrderDetails{},
+		&entity.OrderDetailMenuOptions{},
 	)
 
-	foodCategories := []food_service.FoodCategory{
+	foodCategories := []entity.FoodCategories{
 		{Name: "Beverages", FoodCategoryImage: "https://sodasense.com/cdn/shop/articles/kaizen-nguy-n-jcLcWL8D7AQ-unsplash.jpg?v=1689613635width=584"},
 		{Name: "Main Dishes", FoodCategoryImage: "https://www.recipetineats.com/tachyon/2024/10/Massaman-lamb-shoulder_9a.jpg?resize=747%2C747"},
 		{Name: "Appetizers", FoodCategoryImage: "https://www.healthylifetrainer.com/wp-content/uploads/2021/01/Shrimp-Appetizers-Easy-Party-Appetizers-19.jpg"},
@@ -34,20 +33,20 @@ func SetupFoodServiceDatabase(db *gorm.DB) {
 		{Name: "Snacks", FoodCategoryImage: "https://www.cratejoy.com/cdn/shop/files/wNOhbIsQM2WP3M2DRvfY.jpg?v=1726062746"},
 	}
 	for i := range foodCategories {
-		db.FirstOrCreate(&foodCategories[i], food_service.FoodCategory{Name: foodCategories[i].Name})
+		db.FirstOrCreate(&foodCategories[i], entity.FoodCategories{Name: foodCategories[i].Name})
 	}
 	
-	menus := []food_service.Menu{
-		{MenuName: "Orange Juice", Price: 40.00, Description: "Fresh orange juice", ImageMenu: "https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2024-03/orange-juice-1-jp-240311-1e99ea.jpg", FoodCategoryID: foodCategories[0].ID},
-		{MenuName: "Steak", Price: 250.00, Description: "Grilled steak", ImageMenu: "https://natashaskitchen.com/wp-content/uploads/2020/03/Pan-Seared-Steak-4-728x1092.jpg", FoodCategoryID: foodCategories[1].ID},
-		{MenuName: "Fried Chicken Wings", Price: 120.00, Description: "Crispy fried chicken wings", ImageMenu: "https://easychickenrecipes.com/wp-content/uploads/2023/08/featured-buffalo-wings-recipe-500x500.jpg", FoodCategoryID: foodCategories[2].ID},
-		{MenuName: "Caesar Salad", Price: 90.00, Description: "Classic Caesar salad with croutons", ImageMenu: "https://itsavegworldafterall.com/wp-content/uploads/2023/04/Avocado-Caesar-Salad-FI.jpg", FoodCategoryID: foodCategories[2].ID},
-		{MenuName: "Margherita Pizza", Price: 180.00, Description: "Classic Margherita with fresh mozzarella", ImageMenu: "https://kristineskitchenblog.com/wp-content/uploads/2024/07/margherita-pizza-22-2.jpg", FoodCategoryID: foodCategories[1].ID},
-		{MenuName: "Spaghetti Carbonara", Price: 150.00, Description: "Creamy pasta with bacon and parmesan", ImageMenu: "https://www.foodnetwork.com/content/dam/images/food/fullset/2009/6/12/2/FO1D41_23785_s4x3.jpg", FoodCategoryID: foodCategories[1].ID},
-		{MenuName: "Tom Yum Soup", Price: 120.00, Description: "Spicy and sour Thai soup", ImageMenu: "https://evergreenkitchen.ca/wp-content/uploads/2021/10/Vegan-Tom-Yum-Soup-0-4X5.jpg", FoodCategoryID: foodCategories[1].ID},
-		{MenuName: "Mango Sticky Rice", Price: 80.00, Description: "Sweet sticky rice with fresh mango", ImageMenu: "https://www.vibrantplate.com/wp-content/uploads/2024/03/Thai-Mango-Sticky-Rice-05-735x1103.jpg", FoodCategoryID: foodCategories[2].ID},
-		{MenuName: "Green Tea Latte", Price: 70.00, Description: "Smooth green tea with milk", ImageMenu: "https://munchingwithmariyah.com/wp-content/uploads/2020/06/IMG_0748.jpg", FoodCategoryID: foodCategories[0].ID},
-		{MenuName: "Chocolate Cake", Price: 100.00, Description: "Rich chocolate layer cake", ImageMenu: "https://sallysbakingaddiction.com/wp-content/uploads/2013/04/triple-chocolate-cake-4.jpg", FoodCategoryID: foodCategories[2].ID},
+	menus := []entity.Menus{
+		{MenuName: "Orange Juice", Price: 40.00, Description: "A refreshing drink made from the finest oranges, bursting with natural flavor and perfect for any time of the day.", ImageMenu: "https://media-cldnry.s-nbcnews.com/image/upload/rockcms/2024-03/orange-juice-1-jp-240311-1e99ea.jpg", FoodCategoryID: foodCategories[0].ID},
+		{MenuName: "Steak", Price: 250.00, Description: "A classic dish featuring a grilled centerpiece served with a savory and satisfying flavor profile, perfect for any occasion.", ImageMenu: "https://natashaskitchen.com/wp-content/uploads/2020/03/Pan-Seared-Steak-4-728x1092.jpg", FoodCategoryID: foodCategories[1].ID},
+		{MenuName: "Fried Chicken Wings", Price: 120.00, Description: "Golden-fried and crispy, these wings are seasoned to perfection, offering a delightful crunch with every bite.", ImageMenu: "https://jesspryles.com/wp-content/uploads/2018/01/korean-fried-chicken-32.jpg", FoodCategoryID: foodCategories[2].ID},
+		{MenuName: "Caesar Salad", Price: 90.00, Description: "A classic salad with crisp greens, seasoned croutons, and a creamy dressing that balances flavor and freshness beautifully.", ImageMenu: "https://itsavegworldafterall.com/wp-content/uploads/2023/04/Avocado-Caesar-Salad-FI.jpg", FoodCategoryID: foodCategories[2].ID},
+		{MenuName: "Margherita Pizza", Price: 180.00, Description: "A timeless pizza with a light, crispy crust, topped with rich tomato sauce and creamy mozzarella for a perfect bite.", ImageMenu: "https://kristineskitchenblog.com/wp-content/uploads/2024/07/margherita-pizza-22-2.jpg", FoodCategoryID: foodCategories[1].ID},
+		{MenuName: "Spaghetti Carbonara", Price: 150.00, Description: "A creamy and indulgent pasta dish with a velvety sauce that coats every strand of spaghetti perfectly.", ImageMenu: "https://www.foodnetwork.com/content/dam/images/food/fullset/2009/6/12/2/FO1D41_23785_s4x3.jpg", FoodCategoryID: foodCategories[1].ID},
+		{MenuName: "Tom Yum Soup", Price: 120.00, Description: "A bold and flavorful soup that combines a perfect balance of spicy, sour, and aromatic ingredients.", ImageMenu: "https://evergreenkitchen.ca/wp-content/uploads/2021/10/Vegan-Tom-Yum-Soup-0-4X5.jpg", FoodCategoryID: foodCategories[1].ID},
+		{MenuName: "Mango Sticky Rice", Price: 80.00, Description: "A delightful dessert featuring tender rice paired with the natural sweetness of fresh fruit for a perfect finish.", ImageMenu: "https://www.vibrantplate.com/wp-content/uploads/2024/03/Thai-Mango-Sticky-Rice-05-735x1103.jpg", FoodCategoryID: foodCategories[2].ID},
+		{MenuName: "Green Tea Latte", Price: 70.00, Description: "A soothing beverage with the earthy flavor of green tea combined with the creamy texture of steamed milk.", ImageMenu: "https://munchingwithmariyah.com/wp-content/uploads/2020/06/IMG_0748.jpg", FoodCategoryID: foodCategories[0].ID},
+		{MenuName: "Chocolate Cake", Price: 100.00, Description: "A rich and decadent dessert made with layers of moist cake and velvety chocolate frosting.", ImageMenu: "https://sallysbakingaddiction.com/wp-content/uploads/2013/04/triple-chocolate-cake-4.jpg", FoodCategoryID: foodCategories[2].ID},
 		{MenuName: "Sushi Set", Price: 220.00, Description: "Assorted sushi with wasabi and soy sauce", ImageMenu: "https://img.freepik.com/premium-photo/sushi-set-served-with-traditional-soy-sauce-wasabi-ginger-japanese-cuisine-ai-generated_871188-1000.jpg", FoodCategoryID: foodCategories[1].ID},
 		{MenuName: "French Fries", Price: 50.00, Description: "Crispy golden fries", ImageMenu: "https://sausagemaker.com/wp-content/uploads/Homemade-French-Fries_8.jpg", FoodCategoryID: foodCategories[2].ID},
 		{MenuName: "Latte", Price: 65.00, Description: "Hot espresso with steamed milk", ImageMenu: "https://img.freepik.com/photos-premium/creer-cafe-latte-art_908985-22032.jpg", FoodCategoryID: foodCategories[0].ID},
@@ -62,11 +61,11 @@ func SetupFoodServiceDatabase(db *gorm.DB) {
 		{MenuName: "Nachos", Price: 100.00, Description: "Corn chips with cheese and salsa", ImageMenu: "https://www.babaganosh.org/wp-content/uploads/2021/01/skillet-beef-nachos-22.jpg", FoodCategoryID: foodCategories[9].ID},
 	}
 	for i := range menus {
-		db.FirstOrCreate(&menus[i], food_service.Menu{MenuName: menus[i].MenuName})
+		db.FirstOrCreate(&menus[i], entity.Menus{MenuName: menus[i].MenuName})
 	}
 	
 
-	menuOptions := []food_service.MenuOption{
+	menuOptions := []entity.MenuOptions{
 		{OptionName: "Size", OptionValue: "Small", ExtraPrice: 0},
 		{OptionName: "Size", OptionValue: "Medium", ExtraPrice: 10},
 		{OptionName: "Size", OptionValue: "Large", ExtraPrice: 20},
@@ -87,10 +86,10 @@ func SetupFoodServiceDatabase(db *gorm.DB) {
 		{OptionName: "Cooking Level", OptionValue: "Well Done", ExtraPrice: 0},
 	}
 	for i := range menuOptions {
-		db.FirstOrCreate(&menuOptions[i], food_service.MenuOption{OptionName: menuOptions[i].OptionName, OptionValue: menuOptions[i].OptionValue})
+		db.FirstOrCreate(&menuOptions[i], entity.MenuOptions{OptionName: menuOptions[i].OptionName, OptionValue: menuOptions[i].OptionValue})
 	}
 
-	menuItemOptions := []food_service.MenuItemOption{
+	menuItemOptions := []entity.MenuItemOptions{
 		{MenuID: menus[0].ID, MenuOptionID: menuOptions[0].ID},  // Orange Juice - Small
 		{MenuID: menus[0].ID, MenuOptionID: menuOptions[1].ID},  // Orange Juice - Medium
 		{MenuID: menus[1].ID, MenuOptionID: menuOptions[4].ID},  // Steak - Chicken
@@ -100,46 +99,46 @@ func SetupFoodServiceDatabase(db *gorm.DB) {
 		{MenuID: menus[1].ID, MenuOptionID: menuOptions[15].ID},  // Steak - Medium
 		{MenuID: menus[1].ID, MenuOptionID: menuOptions[16].ID},  // Steak - Medium Well
 		{MenuID: menus[1].ID, MenuOptionID: menuOptions[17].ID}, // Steak - Well Done
-		{MenuID: menus[3].ID, MenuOptionID: menuOptions[2].ID},  // Tom Yum Soup - Mild
-		{MenuID: menus[3].ID, MenuOptionID: menuOptions[4].ID},  // Tom Yum Soup - Hot
-		{MenuID: menus[4].ID, MenuOptionID: menuOptions[5].ID},  // Margherita Pizza - Cheese Topping
-		{MenuID: menus[7].ID, MenuOptionID: menuOptions[6].ID},  // Sushi Set - Bacon Topping
-		{MenuID: menus[15].ID, MenuOptionID: menuOptions[0].ID},  // Iced Coffee - Small
-		{MenuID: menus[15].ID, MenuOptionID: menuOptions[1].ID},  // Iced Coffee - Medium
+		{MenuID: menus[6].ID, MenuOptionID: menuOptions[7].ID},  // Tom Yum Soup - Mild
+		{MenuID: menus[6].ID, MenuOptionID: menuOptions[8].ID},  // Tom Yum Soup - Mild
+		{MenuID: menus[6].ID, MenuOptionID: menuOptions[9].ID},  // Tom Yum Soup - Hot
+		{MenuID: menus[4].ID, MenuOptionID: menuOptions[10].ID},  // Margherita Pizza - Cheese Topping
+		{MenuID: menus[4].ID, MenuOptionID: menuOptions[11].ID},  // Margherita Pizza - Cheese Bacon
 		{MenuID: menus[16].ID, MenuOptionID: menuOptions[3].ID},  // BBQ Ribs - Pork
 		{MenuID: menus[16].ID, MenuOptionID: menuOptions[4].ID},  // BBQ Ribs - Chicken
 		{MenuID: menus[20].ID, MenuOptionID: menuOptions[6].ID},  // Vegan Burger - Tofu
 		{MenuID: menus[17].ID, MenuOptionID: menuOptions[8].ID},  // Spring Rolls - Medium Spice
+		{MenuID: menus[17].ID, MenuOptionID: menuOptions[9].ID},  // Spring Rolls - Hot Spice
 	}
 	for i := range menuItemOptions {
-		db.FirstOrCreate(&menuItemOptions[i], food_service.MenuItemOption{MenuID: menuItemOptions[i].MenuID, MenuOptionID: menuItemOptions[i].MenuOptionID})
+		db.FirstOrCreate(&menuItemOptions[i], entity.MenuItemOptions{MenuID: menuItemOptions[i].MenuID, MenuOptionID: menuItemOptions[i].MenuOptionID})
 	}
 
 	// สร้างตัวอย่าง Order
-	order := food_service.Order{
+	order := entity.Orders{
 		OrderDate:   time.Now(),
 		TotalAmount: 290.00, // ตัวอย่างจำนวนเงินรวม
-		Status: "Pending",
+		Status: "Paid",
 		CustomerID:  1,      // ตัวอย่าง Customer ID
 	}
-	db.FirstOrCreate(&order, food_service.Order{OrderDate: order.OrderDate, CustomerID: order.CustomerID})
+	db.FirstOrCreate(&order)
 	
 	// สร้างตัวอย่าง OrderDetail
-	orderDetails := []food_service.OrderDetail{
+	orderDetails := []entity.OrderDetails{
 		{OrderID: order.ID, MenuID: menus[0].ID, Quantity: 1, Amount: 40.00},  // Orange Juice
 		{OrderID: order.ID, MenuID: menus[1].ID, Quantity: 2, Amount: 500.00}, // Steak
 	}
 	for i := range orderDetails {
-		db.FirstOrCreate(&orderDetails[i], food_service.OrderDetail{OrderID: orderDetails[i].OrderID, MenuID: orderDetails[i].MenuID})
+		db.FirstOrCreate(&orderDetails[i], entity.OrderDetails{OrderID: orderDetails[i].OrderID, MenuID: orderDetails[i].MenuID})
 	}
 	
-	orderDetailsMenuOption := []food_service.OrderDetailMenuOption{
+	orderDetailsMenuOption := []entity.OrderDetailMenuOptions{
 		{OrderDetailID: orderDetails[0].ID, MenuItemOptionID: menuItemOptions[0].ID}, 
 		{OrderDetailID: orderDetails[1].ID, MenuItemOptionID: menuItemOptions[1].ID}, // Steak - Beef
 		{OrderDetailID: orderDetails[1].ID, MenuItemOptionID: menuItemOptions[2].ID}, // Steak - Beef
 	}
 	for i := range orderDetailsMenuOption {
-		db.FirstOrCreate(&orderDetailsMenuOption[i], food_service.OrderDetailMenuOption{
+		db.FirstOrCreate(&orderDetailsMenuOption[i], entity.OrderDetailMenuOptions{
 			OrderDetailID:   orderDetailsMenuOption[i].OrderDetailID,
 			MenuItemOptionID: orderDetailsMenuOption[i].MenuItemOptionID,
 		})

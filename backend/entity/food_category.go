@@ -1,10 +1,10 @@
-package food_service
+package entity
 
 import (
 	"gorm.io/gorm"
  )
  
- type FoodCategory struct {
+ type FoodCategories struct {
 	gorm.Model
 	Name  				string
 	FoodCategoryImage 	string 	`gorm:"type:longtext"`

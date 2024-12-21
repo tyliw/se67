@@ -10,7 +10,6 @@ import { OrderProvider } from "./food_service/context/OrderContext";
 import StripeCheckout from "./stripe/StripeCheckout";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { FoodServicePaymentProvider } from "./payment/context/FoodServicePaymentContext";
 import OrderSummary from "./food_service/page/order_item/OrderItem";
 // import App from "./stripe2/App";
 // import Return from "./stripe2/return";
@@ -46,9 +45,7 @@ const RouterComponent: React.FC = () => {
         {
           path: "order-summary/checkout",
           element: (    
-            <FoodServicePaymentProvider>
               <StripeCheckout />
-            </FoodServicePaymentProvider>
           ),
         },
       ],
@@ -58,9 +55,7 @@ const RouterComponent: React.FC = () => {
       element: (
         <OrderProvider>
         <Elements stripe={stripePromise}>
-            <FoodServicePaymentProvider>
               <CompletePage />
-           </FoodServicePaymentProvider>
           </Elements>
         </OrderProvider>
       ),

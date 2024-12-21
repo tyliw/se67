@@ -1,12 +1,23 @@
 .menu-header {
     position: relative;
     width: 100%;
-    height: 36vw;
-    margin: 32px auto;
+    height: 32vw;
+    margin:  4vh 0;
+    /* margin: 32px auto; */
     border-radius: 8px;
-    background: url("../../assets/sea.jpeg") no-repeat;
+    background: url("../../../assets/food.jpg") no-repeat;
     background-size: cover;
  
+}
+.menu-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000080;
+    border-radius: 8px;
 }
 
 .menu-header-content {
@@ -19,6 +30,7 @@
     bottom: 10%;
     left: 6vw;
     animation: fadeIn 1.2s;
+    z-index: 2;
 
     h2 {
         color: white;

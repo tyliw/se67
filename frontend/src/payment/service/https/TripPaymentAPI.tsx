@@ -16,35 +16,35 @@ const requestOptions = {
 
 async function GetTripPayment() {
   return await axios
-    .get(`${apiUrl}/trippayments`, requestOptions)
+    .get(`${apiUrl}/trip-payments`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function GetTripPaymentById(id: string) {
   return await axios
-    .get(`${apiUrl}/trippayment/${id}`, requestOptions)
+    .get(`${apiUrl}/trip-payment/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function CreateTripPayment(data: TripPaymentInterface) {
   return await axios
-    .post(`${apiUrl}/trippayment`, data, requestOptions)
+    .post(`${apiUrl}/trip-payment`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function UpdateTripPaymentById(id: string, data: TripPaymentInterface) {
   return await axios
-    .put(`${apiUrl}/trippayment/${id}`, data, requestOptions)
+    .put(`${apiUrl}/trip-payment/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
 async function DeleteTripPaymentById(id: string) {
   return await axios
-    .delete(`${apiUrl}/trippayment/${id}`, requestOptions)
+    .delete(`${apiUrl}/trip-payment/${id}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }

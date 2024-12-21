@@ -5,8 +5,10 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 import { useOrder } from "../food_service/context/OrderContext";
-import { Link } from "react-router-dom";
-import { IoChevronBackSharp } from "react-icons/io5";
+// import { Link } from "react-router-dom";
+// import { IoChevronBackSharp } from "react-icons/io5";
+import "./CheckoutForm.css"
+import Spinner from "../components/spinner";
 // import { useNavigate } from "react-router-dom";
 
 interface CheckoutFormProps {
@@ -21,11 +23,10 @@ export default function CheckoutForm({ dpmCheckerLink, total }: CheckoutFormProp
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { filteredOrderDetails } = useOrder();
-  
-  console.log("total check",total)
-
   // const location = useLocation();
   // const { dpmCheckerLink } = location.state || {};
+
+  // console.log("CheckoutForm")
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -69,12 +70,9 @@ export default function CheckoutForm({ dpmCheckerLink, total }: CheckoutFormProp
   return (
     <>
       <form className="payment-form" id="payment-form" onSubmit={handleSubmit}>
-        <Link to={"/login/food-service/order-summary"} style={{ color: "black" }}>
-          <IoChevronBackSharp size={30} className="back-to-menu" />
-        </Link>
         <div className="payment-form-order">
           <div className="total-price">
-            <p>Total Price </p>
+            <p>Total Price (VAT & Promo Code)</p>
             <h1>฿ {total.toFixed(2)}</h1>
             <hr />
           </div>
@@ -84,6 +82,7 @@ export default function CheckoutForm({ dpmCheckerLink, total }: CheckoutFormProp
                 <tr>
                   <th style={{textAlign:"left"}}>Menu Name</th>
                   <th >Quantity</th>
+                  <th >Unit Price</th>
                   <th >Amount</th>
                 </tr>
               </thead>
@@ -93,7 +92,8 @@ export default function CheckoutForm({ dpmCheckerLink, total }: CheckoutFormProp
                     <tr key={item.ID}>
                       <td className="menu-name">{item.Menu?.MenuName}</td>
                       <td className="quantity">{item.Quantity}</td>
-                      <td className="amount">{item.Amount}</td>
+                      <td className="unit-price">{(item.Amount / item.Quantity).toFixed(2)}</td>
+                      <td className="amount">{item.Amount.toFixed(2)}</td>
                     </tr>
                   )
                 })}
@@ -105,7 +105,7 @@ export default function CheckoutForm({ dpmCheckerLink, total }: CheckoutFormProp
           <PaymentElement id="payment-element" options={paymentElementOptions} />
           <button disabled={isLoading || !stripe || !elements} id="submit">
             <span id="button-text">
-              {isLoading ? <div className="spinner" id="spinner"></div> : "Checkout"}
+              {isLoading ? <Spinner/> : "Checkout"}
             </span>
           </button>
           {/* Show any error or success messages */}

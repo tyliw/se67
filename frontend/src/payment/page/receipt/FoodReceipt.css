@@ -1,154 +1,257 @@
-.print-icon {
-    position: absolute;
-    /* width: 6vw;
-    height: 6vh; */
-    top: 78px;
-    right: 10%;
-    /* border: 2px solid black;
-    border-radius: 50%; */
-    cursor: pointer;
+.food-receipt-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  gap: 12px;
+
+  .receipt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* margin-bottom: 30px; */
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      img {
+        height: 4vw;
+      }
+    }
+  }
+
+  .cruise-ship-address {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    p {
+      text-align: center;
+      width: 50%;
+    }
+  }
 }
 
 .customer-detail-container {
-    display: flex;
-    gap: 6vw;
+  display: flex;
 
-    .customer-detail {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-
-        h1 {
-            color: var(--color-theme-main);
-        }
-        .customer-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            
-            span {
-                font-weight: bold;
-            }
-
-            .name {
-                width: auto;
-            }
-            .address {
-                width: 10vw;
-            }
-        }
-    }
-    .receipt-detail {
-
-        .receipt-info {
-            display: flex;
-            justify-content: space-between;
-            gap: 4vw;
-            margin-bottom: 1.4vh;
-            
-            h1 {
-                color: var(--color-theme-main);
-            }
-
-            p {
-                font-weight: bold;
-            }
-        }
-    }
-}
-
-.food-receipt-container {
+  .customer-detail {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
+    gap: 12px;
+    width: 50%;
 
-.table-food-receipt {
-    width: 100%;
-    thead {
-        /* display: none; */
-        text-align: left;
+    h1 {
+      color: var(--color-theme-main);
     }
-    
-    tbody {
-        text-align: left;
-    }
+    .customer-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
 
-    th, td {
-        padding: 16px;
+      span {
+        font-weight: bold;
+      }
+
+      .name {
+        width: auto;
+      }
+      .address {
+        width: 60%;
+      }
     }
+  }
+  .receipt-detail {
+    width: 50%;
+    .receipt-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+
+      h1 {
+        color: var(--color-theme-main);
+      }
+
+      p {
+        font-weight: bold;
+      }
+    }
+  }
 }
 
 .table-order-details {
-    width: 100%;
-    border-collapse: collapse;
-    thead {
-        text-align: center;
-        color: white;
-        background-color: var(--color-theme-main);
-    }
+  width: 100%;
 
-    th, td {
-        padding: 16px;
-    }
+  border-collapse: collapse;
+  thead {
+    text-align: center;
+    color: white;
+    background-color: var(--color-theme-main);
+  }
 
-    .description {
-        text-align: left;
-        width: 60%;
-    }
+  th,
+  td {
+    padding: 8px;
+  }
 
-    .quantity {
-        text-align: center;
-    }
+  .description {
+    text-align: left;
+    width: 60%;
+  }
 
-    td.unit-price {
-        text-align: right;
-    }
+  .quantity {
+    text-align: center;
+  }
 
-    .amount {
-        text-align: center;
-    }
+  th.unit-price,
+  td.unit-price {
+    text-align: right;
+  }
 
-    td.amount {
-        text-align: right;
-    }
+  th.amount,
+  td.amount {
+    text-align: right;
+  }
 }
 
-.table-order-details tr:nth-child(even){background-color: #f2f2f2;}
+.table-order-details tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-summary-container {
+  text-align: right;
+  th {
+    width: 85%;
+  }
+
+  th,
+  td {
+    padding: 8px 8px 0 0;
+  }
+}
 
 .summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 8px;
+  gap: 8px;
+
+  .summary-item {
     display: flex;
-    flex-direction: column;
-    align-items: end;
-    padding: 16px;
-    gap: 16px;
+    /* justify-content: start; */
+    /* align-items: end; */
+    gap: 1.4vw;
 
-    .summary-item {
-        display: flex;
-        /* justify-content: start; */
-        /* align-items: end; */
-        gap: 1.4vw;
+    .header {
+      display: flex;
+      align-items: end;
+      justify-content: end;
+      width: 14vw;
+    }
 
-        .header {
-            display: flex;
-            align-items: end;
-            justify-content: end;
-            width: 12vw;
-   
-        }
-
-        .detail {
-            display: flex;
-            align-items: end;
-            justify-content: end;
-            width: 4vw;
-            
-        }
-    } 
+    .detail {
+      display: flex;
+      align-items: end;
+      justify-content: end;
+      width: 6vw;
+    }
+  }
 }
 
 .description-receipt {
-    p {
-        margin-bottom: 16px;
+  p {
+    margin-bottom: 8px;
+  }
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.print-icon-container {
+  /* position: fixed; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10%;
+  right: 10%;
+  gap: 8px;
+  /* width: 40px;
+    height: 40px; */
+  padding: 8px;
+  border: 3px solid var(--color-theme-main);
+  border-radius: 8px;
+  color: white;
+  background-color: var(--color-theme-main);
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+
+  .print-icon {
+    width: 100%;
+    height: 20px;
+  }
+
+  h1 {
+    font-size: 12px;
+  }
+}
+
+.download-icon-container {
+  /* position: fixed; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10%;
+  right: 10%;
+  gap: 8px;
+  /* width: 40px;
+    height: 40px; */
+  padding: 8px;
+  border: 3px solid var(--color-theme-main);
+  border-radius: 8px;
+  color: white;
+  background-color: var(--color-theme-main);
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+
+  .download-icon {
+    width: 100%;
+    height: 20px;
+  }
+
+  h1 {
+    font-size: 12px;
+  }
+}
+
+.print-icon-container:hover, .download-icon-container:hover {
+  background-color: #ffffff;
+  color: var(--color-theme-main);
+  border: 3px solid var(--color-theme-main);
+}
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .food-receipt-container {
+    page-break-after: always;
+    font-size: 12px !important;
+    padding: 10mm;
+    h1, p {
+        font-size: 12px !important;
     }
+  }
+
+ 
+
+  .icon-container {
+    display: none;
+  }
 }

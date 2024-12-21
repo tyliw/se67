@@ -68,7 +68,7 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
               </div>
               <div className="order-summary-promotion">
                 <p>Promotion</p>
-                <p>฿ {discountedTotal !== null ? formatPrice((numericSubtotal + vat - discountedTotal).toFixed(2)) : "0.00"}</p>
+                <p>฿ - {discountedTotal !== null ? formatPrice((numericSubtotal + vat - discountedTotal).toFixed(2)) : "0.00"}</p>
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
               className={`checkout-button${filteredOrderDetails.length > 0 ? "" : " disabled"}`} 
               disabled={filteredOrderDetails.length === 0}
             >
-              Checkout
+              Confirm Payment
             </button>
           </Link>
         </section>

@@ -1,7 +1,6 @@
-package booking_trip
+package entity
 
 import (
-	"project-se67/entity/customer"
 	"time"
 
 	"gorm.io/gorm"
@@ -14,7 +13,7 @@ type BookingTrip struct {
 	NumberOfGuests int
 
 	CustomerID uint
-	Customer   customer.Customer `gorm:"foreignKey:CustomerID"`
+	Customer   Customers `gorm:"foreignKey:CustomerID"`
 
 	CruiseTripID uint
 	// CruiseTrip   CruiseTrip `gorm:"foreignKey:CruiseTripID"`

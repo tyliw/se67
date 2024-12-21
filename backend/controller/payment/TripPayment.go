@@ -3,12 +3,12 @@ package payment
 import (
 	"net/http"
 	"project-se67/config"
-	"project-se67/entity/payment"
+	"project-se67/entity"
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllTripPayments(c *gin.Context) {
-	var tripPayments []payment.TripPayment
+	var tripPayments []entity.TripPayment
 	db := config.DB()
 
 	if err := db.Find(&tripPayments).Error; err != nil {
@@ -21,7 +21,7 @@ func GetAllTripPayments(c *gin.Context) {
 
 func GetTripPayment(c *gin.Context) {
 	ID := c.Param("id")
-	var tripPayment payment.TripPayment
+	var tripPayment entity.TripPayment
 	db := config.DB()
 
 	if err := db.First(&tripPayment, ID).Error; err != nil {
@@ -33,7 +33,7 @@ func GetTripPayment(c *gin.Context) {
 }
 
 func CreateTripPayment(c *gin.Context) {
-	var tripPayment payment.TripPayment
+	var tripPayment entity.TripPayment
 	if err := c.ShouldBindJSON(&tripPayment); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
 		return
@@ -49,7 +49,7 @@ func CreateTripPayment(c *gin.Context) {
 }
 
 func UpdateTripPayment(c *gin.Context) {
-	var tripPayment payment.TripPayment
+	var tripPayment entity.TripPayment
 	db := config.DB()
 
 	if err := db.First(&tripPayment, c.Param("id")).Error; err != nil {
@@ -70,7 +70,7 @@ func DeleteTripPayment(c *gin.Context) {
 	id := c.Param("id")
 	db := config.DB()
 
-	if tx := db.Delete(&payment.TripPayment{}, id); tx.RowsAffected == 0 {
+	if tx := db.Delete(&entity.TripPayment{}, id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
 		return
 	}

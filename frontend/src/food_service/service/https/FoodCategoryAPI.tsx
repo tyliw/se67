@@ -16,7 +16,7 @@ const requestOptions = {
 // Food Category
 async function GetFoodCategory() {
   return await axios
-    .get(`${apiUrl}/foodcategories`, requestOptions)
+    .get(`${apiUrl}/food-categories`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -24,7 +24,7 @@ async function GetFoodCategory() {
 async function GetFoodCategoryById(id: string) {
   return await axios
 
-    .get(`${apiUrl}/foodcategory/${id}`, requestOptions)
+    .get(`${apiUrl}/food-category/${id}`, requestOptions)
 
     .then((res) => res)
 
