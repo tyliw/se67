@@ -9,11 +9,12 @@ import { message } from "antd";
 import dayjs from "dayjs";
 import LogoCruiseShip from "../../../assets/cruise_ship_logo.jpg"
 import "./FoodReceipt.css";
-import Spinner from "../../../components/spinner";
+// import Spinner from "../../../components/spinner";
 import { MdFileDownload, MdLocalPrintshop } from "react-icons/md";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useReactToPrint } from "react-to-print";
+import Spinner from "../../../components/spinner";
 
 function FoodReceipt() {
   const [foodServicePaymentID, setFoodServicePaymentID] = useState<number | null>(null);

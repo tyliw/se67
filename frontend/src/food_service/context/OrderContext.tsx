@@ -24,11 +24,13 @@ interface OrderContextType {
   totalAmount: number;
   orderID: number;
   customerID: number;
+  searchInput: string;
   addItem: (order: Order) => void;
   removeItem: (MenuDetailID: number) => void;
   increaseQuantityItem: (OrderDetail: OrderDetailInterface,) => void;
   decreaseQuantityItem: (OrderDetail: OrderDetailInterface) => void;
   formatPrice: (price: number | string) => void;
+  setSearchInput: (value: string) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -39,6 +41,8 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
   const [orderID, setOrderID] = useState<number>(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [filteredOrderDetailMenuOptions, setFilteredOrderDetailMenuOptions] = useState<OrderDetailMenuOptionInterface[]>([]);
+
+    const [searchInput, setSearchInput] = useState("");
   // console.log("orderID", orderID)
 
   useEffect(() => {
@@ -256,11 +260,13 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         totalAmount,
         orderID,
         customerID,
+        searchInput,
         addItem,
         removeItem,
         increaseQuantityItem,
         decreaseQuantityItem,
         formatPrice,
+        setSearchInput,
       }}
     >
       {children}

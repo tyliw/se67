@@ -1,4 +1,4 @@
-import { UsersInterface } from "../../interfaces/ICustomer";
+import { CustomerInterface } from "../../interfaces/ICustomer";
 
 export interface OrderInterface {
   ID?: number;
@@ -7,5 +7,5 @@ export interface OrderInterface {
   Status: string;
   
   CustomerID: number;
-  Customer?: UsersInterface;
+  Customer?: CustomerInterface;
 }
