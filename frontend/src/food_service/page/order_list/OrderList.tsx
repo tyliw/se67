@@ -8,7 +8,7 @@ import { message } from "antd";
 import "./OrderList.css";
 
 const OrderList: React.FC = () => {
-  const { filteredOrderDetails, filteredOrderDetailMenuOptions, removeItem } = useOrder(); // Access Context
+  const { filteredOrderDetails, filteredOrderDetailMenuOptions, removeItem, formatPriceWithoutDecimals } = useOrder(); // Access Context
   const [menuOption, setMenuOption] = useState<MenuOptionInterface[]>([]);
   const [messageApi] = message.useMessage();
 
@@ -35,14 +35,6 @@ const OrderList: React.FC = () => {
 
   const handleRemoveItem = (menuID: number) => {
     removeItem(menuID); // ใช้ฟังก์ชันลบเมนู
-  };
-
-  // ฟังก์ชันเพื่อจัดรูปแบบตัวเลขให้มีเครื่องหมายคอมมาและไม่มีจุดทศนิยม
-  const formatPrice = (price: number | string) => {
-    return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
-    }).format(Number(price));
   };
 
   useEffect(() => {
@@ -77,10 +69,10 @@ const OrderList: React.FC = () => {
                             style={{ cursor: "pointer" }}
                           />
                         </td>
-                        <td className="quantity">x{item.Quantity}</td>
+                        <td className="quantity">x{formatPriceWithoutDecimals(item.Quantity)}</td>
                         <td className="menu">
                           <div className="menu-detail">
-                            <span className="menu-name">{item.Menu?.MenuName ?? "Unknown"}</span>
+                            <p className="menu-name">{item.Menu?.MenuName ?? "Unknown"}</p>
                             <div className="selected-options">
                               {itemOptions.length > 0 ? (
                                 itemOptions.map((option) => {
@@ -99,7 +91,7 @@ const OrderList: React.FC = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="amount">฿ {formatPrice(item.Amount)}</td>
+                        <td className="amount">฿ {formatPriceWithoutDecimals(item.Amount)}</td>
                       </tr>
                       // <div className="order-item" key={item.ID}>
                       //   <MdCancel
@@ -136,7 +128,7 @@ const OrderList: React.FC = () => {
                 ) : (
                   <tr style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
                     <td colSpan={4} style={{ textAlign: "center", opacity: "0.7", height: "80px", padding: "10px" }}>
-                      No items in the order.
+                      <span>No items in the order.</span>
                     </td>
                   </tr>
                 )}
@@ -147,10 +139,10 @@ const OrderList: React.FC = () => {
         <section className="summary">
           <div className="total">
             <h1 style={{ margin: 0 }}>Total</h1>
-            <h1 style={{ margin: 0 }}>฿ {formatPrice(subtotal)}</h1>
+            <h1 style={{ margin: 0 }}>฿ {formatPriceWithoutDecimals(subtotal)}</h1>
           </div>
-          <Link to="/login/food-service/order-summary">
-            <button className="confirm-order-button">Confirm Order</button>
+          <Link to="/food-service/login/menu/order-summary">
+            <button className="confirm-order-button">View Order</button>
           </Link>
         </section>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import WavesVideo from "../../../assets/waves_video.mp4"
+import WavesVideo from "../../../assets/1409899-uhd_2560_1440_25fps.mp4"
 import "./Header.css"
 
 export default function Header() {

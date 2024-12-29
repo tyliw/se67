@@ -10,7 +10,7 @@ interface MenuListProps {
 export default function MenuContent({ selectFoodCategory }: MenuListProps) {
   return (
     <section className="content" id="content">
-      <h1>{selectFoodCategory} Menu</h1>
+      <h1>{selectFoodCategory} Menus</h1>
       <div className="menu-content">
         <MenuList selectFoodCategory={selectFoodCategory} />
         <OrderList />

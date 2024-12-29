@@ -9,6 +9,8 @@ import { DeleteOrderDetailById, UpdateOrderDetailById } from "../service/https/O
 import { GetOrderDetailMenuOptions } from "../service/https/OrderDetailMenuOption";
 import { OrderDetailMenuOptionInterface } from "../interface/IOrderDetailMenuOption";
 import { AddItemToOrder, GetOrderByCustomerID } from "../service/https/OrderManageAPI";
+import { GetTripPaymentIDForFoodPayment } from "../../payment/service/https/TripPaymentAPI";
+import { TripPaymentInterface } from "../../payment/interface/ITripPayment";
 
 // Updated Order interface
 export interface Order {
@@ -24,12 +26,14 @@ interface OrderContextType {
   totalAmount: number;
   orderID: number;
   customerID: number;
+  tripPayment: TripPaymentInterface;
   searchInput: string;
   addItem: (order: Order) => void;
   removeItem: (MenuDetailID: number) => void;
   increaseQuantityItem: (OrderDetail: OrderDetailInterface,) => void;
   decreaseQuantityItem: (OrderDetail: OrderDetailInterface) => void;
-  formatPrice: (price: number | string) => void;
+  formatPriceWithoutDecimals: (price: number | string) => string;
+  formatPriceWithTwoDecimals: (price: number | string) => string;
   setSearchInput: (value: string) => void;
 }
 
@@ -41,9 +45,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
   const [orderID, setOrderID] = useState<number>(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [filteredOrderDetailMenuOptions, setFilteredOrderDetailMenuOptions] = useState<OrderDetailMenuOptionInterface[]>([]);
+  const [tripPayment, SetTripPayment] = useState<TripPaymentInterface>();
 
-    const [searchInput, setSearchInput] = useState("");
-  // console.log("orderID", orderID)
+  const [searchInput, setSearchInput] = useState("");
+  // console.log("tripPayment", tripPayment)
 
   useEffect(() => {
     if (orderID && filteredOrderDetails.length > 0) {
@@ -90,8 +95,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
     if (employeeDataString) {
       const employeeData = JSON.parse(employeeDataString);
       setCustomerID(employeeData);
-  
-      try {
+
+      const resTripPayment = await GetTripPaymentIDForFoodPayment(employeeData)
+
+      if (resTripPayment.status === 200) {
+        SetTripPayment(resTripPayment.data)
         const res = await GetOrderByCustomerID(employeeData);
 
         if (res.status === 200) {
@@ -112,9 +120,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         } else {
           console.warn("Failed to fetch order by ID");
         }
-      } catch (error) {
-        console.error("Error loading data:", error);
+      } else {
+        console.error("Failed to fetch trip payment by ID");
       }
+  
     }
   };
   
@@ -123,7 +132,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       message.error("Customer ID is missing. Please log in again.");
       return;
     }
-
+    // console.log("order addItem", orderID)
     if (orderID == 0) {
       // ถ้าไม่มี orderID สำหรับ customer ให้สร้าง order ใหม่
       const newOrderData: OrderInterface = {
@@ -174,6 +183,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         return;
       }
     }
+    loadData();
   };
   
   const removeItem = async (orderDetailID: number) => {
@@ -245,10 +255,16 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
   };
 
   // ฟังก์ชันเพื่อจัดรูปแบบตัวเลขให้มีเครื่องหมายคอมมาและไม่มีจุดทศนิยม
-  const formatPrice = (price: number | string) => {
+  const formatPriceWithoutDecimals = (price: number | string): string => {
     return new Intl.NumberFormat("en-US", {
       maximumFractionDigits: 0,
       minimumFractionDigits: 0,
+    }).format(Number(price));
+  };
+
+  const formatPriceWithTwoDecimals = (price: number | string): string => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
     }).format(Number(price));
   };
 
@@ -260,12 +276,14 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
         totalAmount,
         orderID,
         customerID,
+        tripPayment,
         searchInput,
         addItem,
         removeItem,
         increaseQuantityItem,
         decreaseQuantityItem,
-        formatPrice,
+        formatPriceWithoutDecimals,
+        formatPriceWithTwoDecimals,
         setSearchInput,
       }}
     >

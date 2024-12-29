@@ -1,8 +1,12 @@
 .food-receipt-container {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
   gap: 12px;
+  font-size: 14px;
+
+  h1, p {
+    font-size: 14px ;
+  }
 
   .receipt-header {
     display: flex;
@@ -25,7 +29,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    p {
+    span {
       text-align: center;
       width: 50%;
     }
@@ -41,7 +45,8 @@
     gap: 12px;
     width: 50%;
 
-    h1 {
+    .header {
+      font-weight: bold;
       color: var(--color-theme-main);
     }
     .customer-info {
@@ -50,7 +55,7 @@
       gap: 6px;
 
       span {
-        font-weight: bold;
+        /* font-weight: bold; */
       }
 
       .name {
@@ -61,6 +66,7 @@
       }
     }
   }
+
   .receipt-detail {
     width: 50%;
     .receipt-info {
@@ -68,7 +74,8 @@
       justify-content: space-between;
       margin-bottom: 6px;
 
-      h1 {
+      .header {
+        font-weight: bold;
         color: var(--color-theme-main);
       }
 
@@ -160,9 +167,9 @@
 }
 
 .description-receipt {
-  p {
+  /* p {
     margin-bottom: 8px;
-  }
+  } */
 }
 
 .icon-container {
@@ -195,9 +202,9 @@
     height: 20px;
   }
 
-  h1 {
+  /* h1 {
     font-size: 12px;
-  }
+  } */
 }
 
 .download-icon-container {
@@ -224,7 +231,7 @@
   }
 
   h1 {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -242,10 +249,10 @@
 
   .food-receipt-container {
     page-break-after: always;
-    font-size: 12px !important;
+    font-size: 12px ;
     padding: 10mm;
     h1, p {
-        font-size: 12px !important;
+        font-size: 14px ;
     }
   }
 

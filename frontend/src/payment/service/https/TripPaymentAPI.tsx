@@ -21,7 +21,7 @@ async function GetTripPayment() {
     .catch((e) => e.response);
 }
 
-async function GetTripPaymentById(id: string) {
+async function GetTripPaymentById(id: number) {
   return await axios
     .get(`${apiUrl}/trip-payment/${id}`, requestOptions)
     .then((res) => res)
@@ -35,16 +35,23 @@ async function CreateTripPayment(data: TripPaymentInterface) {
     .catch((e) => e.response);
 }
 
-async function UpdateTripPaymentById(id: string, data: TripPaymentInterface) {
+async function UpdateTripPaymentById(id: number, data: TripPaymentInterface) {
   return await axios
     .put(`${apiUrl}/trip-payment/${id}`, data, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
 
-async function DeleteTripPaymentById(id: string) {
+async function DeleteTripPaymentById(id: number) {
   return await axios
     .delete(`${apiUrl}/trip-payment/${id}`, requestOptions)
+    .then((res) => res)
+    .catch((e) => e.response);
+}
+
+async function GetTripPaymentIDForFoodPayment(userID: number) {
+  return await axios
+    .get(`${apiUrl}/trip-paymentID-for-food-payment/${userID}`, requestOptions)
     .then((res) => res)
     .catch((e) => e.response);
 }
@@ -55,4 +62,5 @@ export {
   UpdateTripPaymentById,
   DeleteTripPaymentById,
   CreateTripPayment,
+  GetTripPaymentIDForFoodPayment,
 };

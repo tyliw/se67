@@ -3,14 +3,15 @@ import { TripPaymentInterface } from "./ITripPayment";
 
 export interface FoodServicePaymentInterface {
   ID?: number;
-  PaymentDate: Date;
-  Price: number;
-  PaymentStatus: string;
-  PaymentMethod: string;
+  PaymentDate?: Date;
+  Price?: number;
+  VAT?: number;
+  PaymentStatus?: string;
+  PaymentMethod?: string;
 
-  OrderID: number;
+  OrderID?: number;
   Order?: OrderInterface;
   
-  TripPaymentID: number;
+  TripPaymentID?: number;
   TripPayment?: TripPaymentInterface;
 }

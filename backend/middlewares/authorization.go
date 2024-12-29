@@ -8,7 +8,7 @@ import (
    "strings"
 
 
-   "project-se67/services"
+   "team03/se67/services"
 
    "github.com/gin-gonic/gin"
 

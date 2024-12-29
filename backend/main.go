@@ -1,9 +1,9 @@
 package main
 
 import (
-	"project-se67/config"
-	"project-se67/routers"
-	"project-se67/servers"
+	"team03/se67/config"
+	"team03/se67/routers"
+	"team03/se67/servers"
 )
 
 func main() {

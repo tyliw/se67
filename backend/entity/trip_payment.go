@@ -8,12 +8,13 @@ import (
 
 type TripPayment struct {
 	gorm.Model
-	PaymentDate 	time.Time 		`gorm:"not null"`
-	TotalPrice 		float32			`gorm:"not null"`
-	PaymentStatus	string			`gorm:"not null"`
-	PaymentMethod	string			`gorm:"not null"`
+	PaymentDate 	time.Time 		`valid:"required~PaymentDate is required"`
+	TotalPrice 		float64			`valid:"-"`
+	VAT             float64        	`valid:"-"`
+	PaymentStatus	string			`valid:"required~PaymentStatus is required"`
+	PaymentMethod	string			`valid:"required~PaymentMethod is required"`
 
 	
-	BookingCabinID uint
-	BookingCabin	*BookingCabin `gorm:"foreignKey:BookingCabinID;constraint:OnDelete:CASCADE;"`
+	BookingCabinID uint				`valid:"required~BookingCabinID is required"`
+	BookingCabin	*BookingCabin 	`gorm:"foreignKey:BookingCabinID;constraint:OnDelete:CASCADE;" valid:"-"`
 }

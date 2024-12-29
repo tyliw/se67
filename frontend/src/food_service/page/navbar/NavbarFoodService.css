@@ -1,5 +1,9 @@
 .food-service-container {
     position: relative;
+    /* width: 100%; */
+    /* height: 100vh; */
+    /* background: url(../../../assets/blue-toned-collection-aligned-paper-sheets.jpg); */
+    background-size: cover;
 }
 
 .navbar {
@@ -15,7 +19,7 @@
     z-index: 100;
 }
 
-header .cruise-ship-logo {
+nav .cruise-ship-logo {
     position: relative;
     left: 10px;
     width: auto;
@@ -24,7 +28,7 @@ header .cruise-ship-logo {
     /* width: 100%; */
 }
 
-header .menu {
+nav .menu {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -32,16 +36,30 @@ header .menu {
 }
 
 .user-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    gap: 12px;
-    height: 40px;
-    padding: 12px;
-    border-radius: 100px;
-    color: white;
-    background-color: var(--color-theme-main);
+    padding: 0 12px;
+
+    .custom-tooltip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        gap: 12px;
+        height: 40px;
+        padding: 12px;
+        border-radius: 100px;
+        color: white;
+        background-color: var(--color-theme-main);
+
+        .logout-button {
+            display: flex;
+            /* width: 1000px; */
+        }
+    }
+/* 
+    .custom-tooltip .ant-tooltip-inner {
+        color: #333;
+        font-size: 14px;
+      } */
 }
 
 
@@ -64,7 +82,7 @@ header .menu {
         border: none;
         height: 100%;
         font-size: 14px;
-        font-weight: bold;
+        /* font-weight: bold; */
     }
 
     input:focus {
@@ -72,7 +90,7 @@ header .menu {
     }
 }
 
-header .menu a {
+nav .menu a {
     color: #000;
     text-decoration: none;
     padding: 2px 12px;
@@ -83,13 +101,16 @@ header .menu a {
 
         span {
             position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             font-weight: bold;
             font-size: 12px;
-            width: 18px;
-            height: 18px;
-            top: -4px;
-            right: -6.5px;
+            width: 20px;
+            height: 20px;
+            top: -12%;
+            right: -24%;
             border: 3px solid var(--color-red);
             border-radius: 50%;
             color: white;

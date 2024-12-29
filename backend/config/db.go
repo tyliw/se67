@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"project-se67/config/setup"
+	// "project-se67/config/setup"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -16,17 +16,24 @@ func DB() *gorm.DB {
 func ConnectionDB() {
    database, err := gorm.Open(sqlite.Open("project-se67.db?cache=shared"), &gorm.Config{})
    if err != nil {
-       panic("failed to connect databaase")
+       panic("failed to connect database")
    }
    fmt.Println("connected database")
    db = database
 }
 
 func SetupDatabase() {
-   setup.SetupFoodServiceDatabase(db)
-   setup.SetupPaymentDatabase(db)
+   SetupFoodServiceDatabase()
+   SetupPaymentDatabase()
+
    SetupUserDatabase()
 
+   SetupBookingCabinDatabase()
+   SetupCabinTypeDatabase()
+   SetupBookingTripDatabase()
+   
+   SetupCruiseTripDatabase()
+   
 
 	fmt.Println("Sample data has been added to the database.")
 }

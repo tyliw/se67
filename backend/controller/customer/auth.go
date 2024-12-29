@@ -8,9 +8,9 @@ import (
    "github.com/gin-gonic/gin"
    "golang.org/x/crypto/bcrypt"
    "gorm.io/gorm"
-   "project-se67/config"
-   "project-se67/entity"
-   "project-se67/services"
+   "team03/se67/config"
+   "team03/se67/entity"
+   "team03/se67/services"
 )
 
 

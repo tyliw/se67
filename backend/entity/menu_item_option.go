@@ -6,9 +6,9 @@ import (
 
 type MenuItemOptions struct {
 	gorm.Model
-	MenuID     		uint
-	Menu      		*Menus      	`gorm:"foreignKey:MenuID"`
+	MenuID     		uint			`valid:"required~MenuID is required"`
+	Menu      		*Menus      	`gorm:"foreignKey:MenuID" valid:"-"`
 
-	MenuOptionID 	uint
-	MenuOption   	*MenuOptions `gorm:"foreignKey:MenuOptionID"`
+	MenuOptionID 	uint			`valid:"required~MenuOptionID is required"`
+	MenuOption   	*MenuOptions 	`gorm:"foreignKey:MenuOptionID" valid:"-"`
 }

@@ -2,8 +2,8 @@ package food_service
 
 import (
 	"net/http"
-	"project-se67/config"
-	"project-se67/entity"
+	"team03/se67/config"
+	"team03/se67/entity"
 	"github.com/gin-gonic/gin"
 )
 

@@ -35,17 +35,20 @@ export default function MenuCategory({selectFoodCategory, setSelectFoodCategory}
   return (
       <section className="menu-category-container">
         {contextHolder}
-        <h1>Select Category</h1>
+        <h1>Explore Our Menu Category</h1>
         <div className="menu-category-list">
             {foodCategory.map((item) => {
                 return (
-                <div key={item.ID} className="menu-category-item" onClick={() => setSelectFoodCategory((prev: string)=>prev==item.Name?"All":item.Name || "All")}>
-                        <img className={selectFoodCategory==item.Name?"active":""} src={item.FoodCategoryImage} alt={item.Name} />
-                    <p>{item.Name}</p>
+                <div key={item.ID} className="menu-category-item-container" onClick={() => setSelectFoodCategory((prev: string)=>prev==item.FoodCategoryName?"All":item.FoodCategoryName || "All")}>
+                    <div className={selectFoodCategory==item.FoodCategoryName?"menu-category-item-active":"menu-category-item"}>
+                      <img src={item.FoodCategoryImage} alt={item.FoodCategoryName} />
+                      <p>{item.FoodCategoryName}</p>
+                    </div>
                 </div>
                 )
             })}
         </div>
+        <hr />
     </section>
 
   )

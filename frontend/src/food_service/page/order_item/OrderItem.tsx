@@ -15,7 +15,7 @@ import "./OrderItem.css";
 
 const OrderItem: React.FC = () => {
   // Context สำหรับรายการอาหาร
-  const {filteredOrderDetails,filteredOrderDetailMenuOptions, increaseQuantityItem, decreaseQuantityItem,removeItem} = useOrder();
+  const {filteredOrderDetails,filteredOrderDetailMenuOptions, increaseQuantityItem, decreaseQuantityItem, removeItem, formatPriceWithoutDecimals} = useOrder();
 
   // สถานะสำหรับ subtotal
   const [subtotal, setSubtotal] = useState<number>(0);
@@ -47,7 +47,7 @@ const OrderItem: React.FC = () => {
   return (
     <>
       <div className="order-item-container">
-        <Link to={"/login/food-service/order"}>
+        <Link to={"/food-service/login/menu/order"}>
           <IoChevronBackSharp size={30} className="back-to-menu" />
         </Link>
         <div className="order-card">
@@ -82,12 +82,7 @@ const OrderItem: React.FC = () => {
                           <td>
                             <img src={item.Menu?.ImageMenu} alt={item.Menu?.MenuName} />
                           </td>
-                          <td>
-                            <div className="order-item-menu-detail">
-                              <h1>{item.Menu?.MenuName}</h1>
-                              {/* <p>{item.Menu?.Description}</p> */}
-                            </div>
-                          </td>
+                          <td>{item.Menu?.MenuName}</td>
                           <td>
                             {/* Show option values */}
                             {relatedOptions.map((opt) => {
@@ -101,7 +96,7 @@ const OrderItem: React.FC = () => {
                               );
                             })}
                           </td>
-                          <td>฿ {item.Amount}</td>
+                          <td>฿ {formatPriceWithoutDecimals(item.Amount)}</td>
                           <td>
                             <div className="order-item-quantity-control">
                               {item.Quantity === 1 ? (
@@ -121,7 +116,7 @@ const OrderItem: React.FC = () => {
                               <input
                                 className="order-item-quantity"
                                 name="order-item-quantity"
-                                value={item.Quantity}
+                                value={formatPriceWithoutDecimals(item.Quantity)}
                                 readOnly
                               />
                               <button
@@ -136,7 +131,6 @@ const OrderItem: React.FC = () => {
                             <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
                               <MdCancel
                                 className="cancel-icon"
-                                color="aaa"
                                 onClick={() => removeItem(item.ID as number)}
                                 style={{ cursor: "pointer" }}
                               />
@@ -153,11 +147,11 @@ const OrderItem: React.FC = () => {
                         <div className="no-order">
                           <img src={EmptyCartLogo} alt="empty cart" />
                           <Link
-                            to="/login/food-service/order"
-                            style={{ textDecoration: "none", color: "gray" }}
+                            to="/food-service/login/menu/order"
+                            style={{ textDecoration: "none"}}
                           >
                             <div className="message">
-                              <p style={{ fontSize: "14px" }}>Your order is empty</p>
+                              <p>Your order is empty</p>
                               <button>Order Now</button>
                             </div>
                           </Link>

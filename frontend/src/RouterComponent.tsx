@@ -1,18 +1,26 @@
-import React, { StrictMode } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SignInPages from "./authentication/Login";
-import SignUpPages from "./authentication/Register";
-import NavbarFoodService from "./food_service/page/navbar/NavbarFoodService";
-import Menu from "./food_service/page/menu/Menu";
-import MenuDetail from "./food_service/page/menu_detail/MenuDetail";
-import CompletePage from "./stripe/CompletePage";
-import { OrderProvider } from "./food_service/context/OrderContext";
-import StripeCheckout from "./stripe/StripeCheckout";
+import React, { lazy, StrictMode } from "react";
+import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import OrderSummary from "./food_service/page/order_item/OrderItem";
-// import App from "./stripe2/App";
-// import Return from "./stripe2/return";
+import { OrderProvider } from "./food_service/context/OrderContext";
+
+import Loadable from "./components/third-party/Loadable";
+// import Loader from "./components/third-party/Loader";
+// import LDSRing from "./components/third-party/LDSRing";
+import SignInPages from "./authentication/Login";
+import DotLoader from "./components/third-party/DotLoader";
+import TripSummary from "./payment/page/trip_summary/TripSummary";
+import TripCompletePage from "./payment/page/trip_stripe/TripCompletePage";
+
+// Food Service
+// const SignInPages = Loadable(lazy(() => import("./authentication/Login")));
+const SignUpPages = Loadable(lazy(() => import("./authentication/Register")));
+const NavbarFoodService = Loadable(lazy(() => import("./food_service/page/navbar/NavbarFoodService")));
+const Menu = Loadable(lazy(() => import("./food_service/page/menu/Menu")));
+const MenuDetail = Loadable(lazy(() => import("./food_service/page/menu_detail/MenuDetail")));
+const OrderSummary = Loadable(lazy(() => import("./food_service/page/order_item/OrderItem")));
+const StripeCheckout = Loadable(lazy(() => import("./payment/page/food_stripe/FoodStripeCheckout")));
+const CompletePage = Loadable(lazy(() => import("./payment/page/food_stripe/FoodCompletePage")));
 
 const stripePromise = loadStripe("pk_test_51QOxoF4QmAAjQ0QzsimUKy0RcgMxNPvfbmCm6OJurQzEGULD1u2OfTSGfdd0OwpEW0tzpdkQvmQSZKvbq9waUceD00PaT9sjdJ");
 
@@ -20,14 +28,27 @@ const RouterComponent: React.FC = () => {
   const router = createBrowserRouter([
     {
       path: "/",
+      element: (
+        <>
+          <Link to={"/food-service/login"}>to food service</Link><br />
+          <Link to={"/trip-summary"}>trip</Link>
+        </>
+      ),
+    },
+    {
+      path: "/food-service/login",
       element: <SignInPages />,
     },
     {
-      path: "/signup",
+      path: "/food-service/signup",
       element: <SignUpPages />,
     },
     {
-      path: "/login/food-service",
+      path: "/loader",
+      element: <DotLoader />,
+    },
+    {
+      path: "/food-service/login/menu",
       element: <OrderProvider><NavbarFoodService /></OrderProvider>,
       children: [
         {
@@ -51,7 +72,7 @@ const RouterComponent: React.FC = () => {
       ],
     },
     {
-      path: "/login/food-service/order/order-summary/checkout/complete",
+      path: "/food-service/login/menu/order-summary/checkout/complete",
       element: (
         <OrderProvider>
         <Elements stripe={stripePromise}>
@@ -60,14 +81,20 @@ const RouterComponent: React.FC = () => {
         </OrderProvider>
       ),
     },
-    // {
-    //   path:"/checkout", 
-    //   element: <App />
-    // },
-    // {
-    //   path:"/return", 
-    //   element: <Return />
-    // },
+    {
+      path: "/trip-summary",
+      element: <TripSummary/>,
+    },
+    {
+      path: "trip-summary/complete",
+      element: (
+        <OrderProvider>
+        <Elements stripe={stripePromise}>
+              <TripCompletePage />
+          </Elements>
+        </OrderProvider>
+      ),
+    },
   ]);
 
   return (

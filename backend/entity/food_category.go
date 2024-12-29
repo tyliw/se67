@@ -2,10 +2,10 @@ package entity
 
 import (
 	"gorm.io/gorm"
- )
- 
- type FoodCategories struct {
+)
+
+type FoodCategories struct {
 	gorm.Model
-	Name  				string
-	FoodCategoryImage 	string 	`gorm:"type:longtext"`
- }
+	FoodCategoryName  string `valid:"required~FoodCategoryName is required"`
+	FoodCategoryImage string `gorm:"type:longtext" valid:"required~FoodCategoryImage is required"`
+}

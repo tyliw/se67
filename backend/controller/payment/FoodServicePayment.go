@@ -2,9 +2,9 @@ package payment
 
 import (
 	"net/http"
-	"project-se67/config"
-	"project-se67/entity"
-	// "project-se67/entity/food_service"
+	"team03/se67/config"
+	"team03/se67/entity"
+	// "team03/se67/entity/food_service"
 	"github.com/gin-gonic/gin"
 )
 

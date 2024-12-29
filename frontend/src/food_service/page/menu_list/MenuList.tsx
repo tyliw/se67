@@ -4,9 +4,9 @@ import { GetMenu } from "../../service/https/MenuAPI";
 import { message } from "antd";
 // import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import "./MenuList.css";
 import { useOrder } from "../../context/OrderContext";
 import { Empty } from 'antd';
+import "./MenuList.css";
 
 interface MenuListProps {
   selectFoodCategory: string;
@@ -14,7 +14,7 @@ interface MenuListProps {
 export default function MenuList({ selectFoodCategory }: MenuListProps) {
   const [menu, setMenu] = useState<MenuInterface[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
-  const { searchInput } = useOrder();
+  const { searchInput, formatPriceWithoutDecimals } = useOrder();
 
   const getMenus = async () => {
     const res = await GetMenu();
@@ -29,12 +29,12 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
     }
   };
 
-  const formatPrice = (price: number | string) => {
-    return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
-    }).format(Number(price));
-  };
+  // const formatPrice = (price: number | string) => {
+  //   return new Intl.NumberFormat("en-US", {
+  //     maximumFractionDigits: 0,
+  //     minimumFractionDigits: 0,
+  //   }).format(Number(price));
+  // };
 
   useEffect(() => {
     getMenus();
@@ -43,7 +43,7 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
   const filteredMenu = menu.filter((item) => {
     const matchesCategory =
       selectFoodCategory === "All" ||
-      selectFoodCategory === item.FoodCategory?.Name;
+      selectFoodCategory === item.FoodCategory?.FoodCategoryName;
 
     const matchesSearch =
       searchInput === "" ||
@@ -59,7 +59,7 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
         filteredMenu.map((item) => (
           <Link
             key={item.ID}
-            to="/login/food-service/menu-detail"
+            to="/food-service/login/menu/menu-detail"
             state={{ menuDetailSelect: item }}
             style={{
               textDecoration: "none",
@@ -78,16 +78,22 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
                 <div className="info">
                   <header>
                     <h1 className="menu-name">{item.MenuName}</h1>
-                    <h1 className="menu-price">฿ {formatPrice(item.Price)}</h1>
+                    <h1 className="menu-price">฿ {formatPriceWithoutDecimals(item.Price)}</h1>
                   </header>
                 </div>
+                {/* <div className="menu-item-footer">
+                  <Flex gap="middle" vertical>
+                    <Rate disabled defaultValue={4}/>
+                  </Flex>
+                    <div className="select-order">select</div>
+                </div> */}
               </div>
             </div>
           </Link>
         ))
       ) : (
         <div className="no-data-container">
-          <Empty className="no-data" description={`Couldn't Find Results for "${searchInput}"`}/>
+          <Empty className="no-data" description={`No Menu Found`}/>
         </div>
       )}
     </div>

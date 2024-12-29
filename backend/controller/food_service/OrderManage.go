@@ -3,8 +3,8 @@ package food_service
 import (
 	// "fmt"
 	"net/http"
-	"project-se67/config"
-	"project-se67/entity"
+	"team03/se67/config"
+	"team03/se67/entity"
 	// "time"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +22,7 @@ type AddItemRequest struct {
 
 // GetPendingOrderByCustomerID retrieves the pending order for a specific customer
 func GetPendingOrderByCustomerID(c *gin.Context) {
-	customerID := c.Param("customerID") // รับ CustomerID จาก URL
+	customerID := c.Param("id") // รับ CustomerID จาก URL
 	var order entity.Orders
 	db := config.DB()
 

@@ -14,22 +14,27 @@ import { MdFileDownload, MdLocalPrintshop } from "react-icons/md";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useReactToPrint } from "react-to-print";
-import Spinner from "../../../components/spinner";
+// import Spinner from "../../../components/spinner";
 
-function FoodReceipt() {
+export default function FoodReceipt() {
   const [foodServicePaymentID, setFoodServicePaymentID] = useState<number | null>(null);
   const [foodServicePayment, setFoodServicePayment] = useState<FoodServicePaymentInterface>();
   const [messageApi, contextHolder] = message.useMessage();
   const [customer, setCustomer] = useState<CustomerInterface>();
   const [orderDetail, setOrderDetail] = useState<OrderDetailInterface[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false); // Track if data is loaded
+  const [, setIsLoaded] = useState(false); // Track if data is loaded
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
-  const total = foodServicePayment?.Price ? foodServicePayment.Price : 0;
-  const vat = total ? (total - total / 1.07) : 0;
-  const subtotal = total && vat ? total - vat : 0;
+  // const total = foodServicePayment?.Price ? foodServicePayment.Price : 0;
+  // const vat = total ? (total - total / 1.07) : 0;
+  // const subtotal = total && vat ? total - vat : 0;
+  const formatPriceWithTwoDecimals = (price: number | string): string => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+    }).format(Number(price));
+  };
   
   const formattedDate = foodServicePayment?.PaymentDate
     ? dayjs(foodServicePayment.PaymentDate).format("DD/MM/YYYY") // Adjust format as needed
@@ -84,6 +89,7 @@ function FoodReceipt() {
         if (!isNaN(parsedData)) {
           setFoodServicePaymentID(parsedData);
           clearInterval(intervalId);
+          localStorage.removeItem("VAT")
         } else {
           console.error("foodServicePaymentID is not valid in localStorage");
         }
@@ -108,51 +114,55 @@ function FoodReceipt() {
     }
   }, [foodServicePayment, customer, orderDetail]);
 
-  if (!isLoaded) {
-    return <Spinner/>; // Or a loading spinner
-  }
 
   // Filter order details where OrderID matches the OrderID in foodServicePayment
   const filteredOrderDetails = orderDetail.filter((detail) => foodServicePayment?.OrderID === detail.OrderID);
-  const handleDownload = async () => {
-    if (contentRef.current) {
-      // Hide the icons before capturing
-      const icons = document.querySelectorAll(".icon-container");
-      icons.forEach((icon) => {
-        (icon as HTMLElement).style.display = "none";
-      });
-  
-      // Step 1: Capture the content as a canvas using html2canvas
-      const canvas = await html2canvas(contentRef.current, {
-        scale: 3, // Increase the resolution of the canvas (higher scale = better quality)
-        useCORS: true, // Ensures that images from cross-origin sources are captured
-      });
-  
-      // Step 2: Convert the canvas to an image (base64 format)
-      const imgData = canvas.toDataURL("image/png");
-  
-      // Step 3: Create a new PDF document using jsPDF
-      const pdf = new jsPDF("p", "mm", "a4"); // A4 paper size, portrait orientation
-  
-      // Step 4: Calculate image dimensions to fit it within the A4 paper size
-      const pdfWidth = pdf.internal.pageSize.getWidth() - 20; // 10mm padding on each side
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
-  
-      // Step 5: Add the image to the PDF
-      pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
-  
-      // Step 6: Save the generated PDF
-      pdf.save("payment-receipt.pdf");
-  
-      // Restore the icons after generating the PDF
-      icons.forEach((icon) => {
-        (icon as HTMLElement).style.display = "";
-      });
-    } else {
-      console.error("Content reference is not available.");
-    }
-  };
-  
+
+const handleDownload = async () => {
+  if (contentRef.current) {
+    // Hide the icons before capturing
+    const icons = document.querySelectorAll(".icon-container");
+    icons.forEach((icon) => {
+      (icon as HTMLElement).style.display = "none";
+    });
+
+    // Change font size to 12px
+    const container = contentRef.current;
+    const originalFontSize = container.style.fontSize; // Save original font size
+    container.style.fontSize = "12px";
+
+    // Step 1: Capture the content as a canvas using html2canvas
+    const canvas = await html2canvas(container, {
+      scale: 3, // Increase the resolution of the canvas (higher scale = better quality)
+      useCORS: true, // Ensures that images from cross-origin sources are captured
+    });
+
+    // Step 2: Convert the canvas to an image (base64 format)
+    const imgData = canvas.toDataURL("image/png");
+
+    // Step 3: Create a new PDF document using jsPDF
+    const pdf = new jsPDF("p", "mm", "a4"); // A4 paper size, portrait orientation
+
+    // Step 4: Calculate image dimensions to fit it within the A4 paper size
+    const pdfWidth = pdf.internal.pageSize.getWidth() - 20; // 10mm padding on each side
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
+
+    // Step 5: Add the image to the PDF
+    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
+
+    // Step 6: Save the generated PDF
+    pdf.save("payment-receipt.pdf");
+
+    // Restore font size and icons after generating the PDF
+    container.style.fontSize = originalFontSize;
+    icons.forEach((icon) => {
+      (icon as HTMLElement).style.display = "";
+    });
+  } else {
+    console.error("Content reference is not available.");
+  }
+};
+
 
   return (
     <section className="food-receipt-container" ref={contentRef}>
@@ -166,13 +176,13 @@ function FoodReceipt() {
       </div>
 
       <div className="cruise-ship-address">
-        <p>Cruise Ship Limited</p>
-        <p>Suranaree University of Technology (SUT) is 111 University Avenue, Muang District, Nakhon Ratchasima 30000, Thailand123</p>
+        <span>Cruise Ship Limited</span>
+        <span>Suranaree University of Technology (SUT) is 111 University Avenue, Muang District, Nakhon Ratchasima 30000, Thailand123</span>
       </div>
 
       <div className="customer-detail-container">
         <div className="customer-detail">
-          <h1>Bill To</h1>
+          <span className="header">BILL TO</span>
           <div className="customer-info">
             <span className="name">{customer?.FirstName} {customer?.LastName}</span>
             <span className="address">4312 Wood Road New York, NY 100031</span>
@@ -180,16 +190,16 @@ function FoodReceipt() {
         </div>
         <div className="receipt-detail">
           <div className="receipt-info">
-            <h1>RECEIPT</h1>
-            <p>#{foodServicePayment?.ID}</p>
+            <span className="header">RECEIPT</span>
+            <span>#{foodServicePayment?.ID}</span>
           </div>
           <div className="receipt-info">
-            <h1>RECEIPT DATE</h1>
-            <p>{formattedDate}</p>
+            <span className="header">RECEIPT DATE</span>
+            <span>{formattedDate}</span>
           </div>
           <div className="receipt-info">
-            <h1>PAYMENT METHOD</h1>
-            <p>{foodServicePayment?.PaymentMethod}</p>
+            <span className="header">PAYMENT METHOD</span>
+            <span>{foodServicePayment?.PaymentMethod}</span>
           </div>
         </div>
       </div>
@@ -207,9 +217,9 @@ function FoodReceipt() {
           {filteredOrderDetails.map((detail, index) => (
             <tr key={detail.ID}>
               <td className="menu-name">{index + 1}. {detail.Menu?.MenuName}</td>
-              <td className="quantity">{detail.Quantity}</td>
-              <td className="unit-price">{(detail.Amount / detail.Quantity).toFixed(2)}</td>
-              <td className="amount">{detail.Amount.toFixed(2)}</td>
+              <td className="quantity">{formatPriceWithTwoDecimals(detail.Quantity)}</td>
+              <td className="unit-price">{formatPriceWithTwoDecimals(detail.Amount / detail.Quantity)}</td>
+              <td className="amount">{formatPriceWithTwoDecimals(detail.Amount)}</td>
             </tr>
           ))}
         </tbody>
@@ -223,26 +233,26 @@ function FoodReceipt() {
           </tr>
           <tr>
             <th>VAT 7%</th>
-            <td>{vat.toFixed(2)}</td>
+            <td>{formatPriceWithTwoDecimals(foodServicePayment?.VAT ?? 0)}</td>
           </tr>
           <tr>
             <th>Subtotal</th>
-            <td>{subtotal.toFixed(2)}</td>
+            <td>{formatPriceWithTwoDecimals(foodServicePayment?.Order?.TotalAmount ?? 0)}</td>
           </tr>
           <tr>
             <th>Total</th>
-            <td>{total.toFixed(2)}</td>
+            <td>{formatPriceWithTwoDecimals(foodServicePayment?.Price ?? 0)}</td>
           </tr>
         </tbody>
       </table>
 
       <hr />
       <div className="description-receipt">
-        <p>This e-tax invoice/e-receipt is prepared by Cruise Ship and submitted electronically to the Revenue Department.</p>
-        <p>Please carefully check the document and any amendment can be requested within 15 days. Otherwise, the e-tax invoice/e-receipt shall be deemed complete and accurate for submission.</p>
+        <p>This e-tax invoice/e-receipt is prepared by Cruise Ship and submitted electronically to the Revenue Department.</p><br />
+        <p>Please carefully check the document and any amendment can be requested within 15 days. Otherwise, the e-tax invoice/e-receipt shall be deemed complete and accurate for submission.</p><br />
       </div>
       <div className="icon-container">
-        <div className="print-icon-container"  onClick={reactToPrintFn}>
+        <div className="print-icon-container"  onClick={() => reactToPrintFn()}>
           <MdLocalPrintshop className="print-icon"></MdLocalPrintshop>
           <h1>PRINT</h1>
         </div>
@@ -254,5 +264,3 @@ function FoodReceipt() {
     </section>
   );
 }
-
-export default FoodReceipt;

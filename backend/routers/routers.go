@@ -1,13 +1,16 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"project-se67/controller/customer"
-	"project-se67/controller/food_service"
-	"project-se67/controller/genders"
-	"project-se67/controller/payment"
-	"project-se67/middlewares"
+	"team03/se67/controller/booking_cabin"
+	"team03/se67/controller/booking_trip"
+	"team03/se67/controller/customer"
+	"team03/se67/controller/food_service"
+	"team03/se67/controller/genders"
+	"team03/se67/controller/payment"
+	"team03/se67/middlewares"
+
+	"github.com/gin-gonic/gin"
 )
 
 const PORT = "8000"
@@ -15,85 +18,25 @@ const PORT = "8000"
 // SetupRouter initializes the router
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	r.Use(middlewares.CORSMiddleware()) // ใช้งาน CORS middleware
+	r.Use(middlewares.CORSMiddleware())
 
-	// Auth Route
-	r.POST("/signup", customer.SignUp)
-	r.POST("/signin", customer.SignIn)
+	// Public Routes
+	setupAuthRoutes(r)
 
-	// เส้นทางสำหรับการสมัครและลงชื่อเข้าใช้
-	router := r.Group("/")
-	{
-		router.Use(middlewares.Authorizes())
+	// Private Routes (Require Authorization)
+	private := r.Group("/")
+	private.Use(middlewares.Authorizes())
+	
+	setupUserRoutes(private)
+	setupPaymentRoutes(private)
+	setupFoodServiceRoutes(private)
+	setupBookingCabinRoutes(private)
+	setupBookingTripRoutes(private)
 
-		// User Route
-		router.PUT("/user/:id", customer.Update)
-		router.GET("/users", customer.GetAll)
-		router.GET("/user/:id", customer.Get)
-		router.DELETE("/user/:id", customer.Delete)
-
-		// เส้นทางการจัดการ payment
-		router.GET("/food-service-payments", payment.GetAllFoodServicePayments)
-		router.GET("/food-service-payment/:id", payment.GetFoodServicePayment)
-		router.POST("/food-service-payment", payment.CreateFoodServicePayment)
-		router.PUT("/food-service-payment/:id", payment.UpdateFoodServicePayment)
-		router.DELETE("/food-service-payment/:id", payment.DeleteFoodServicePayment)
-
-		router.GET("/trip-payments", payment.GetAllTripPayments)
-		router.GET("/trip-payment/:id", payment.GetTripPayment)
-		router.POST("/trip-payment", payment.CreateTripPayment)
-		router.PUT("/trip-payment/:id", payment.UpdateTripPayment)
-		router.DELETE("/trip-payment/:id", payment.DeleteTripPayment)
-
-		// เส้นทางการจัดการ food_service
-		router.GET("/food-categories", food_service.GetAllFoodCategories)
-		router.GET("/food-category/:id", food_service.GetFoodCategory)
-		router.POST("/food-category", food_service.CreateFoodCategory)
-		router.PUT("/food-category/:id", food_service.UpdateFoodCategory)
-		router.DELETE("/food-category/:id", food_service.DeleteFoodCategory)
-
-		router.GET("/menus", food_service.GetAllMenus)
-		router.GET("/menu/:id", food_service.GetMenu)
-		router.POST("/menu", food_service.CreateMenu)
-		router.PUT("/menu/:id", food_service.UpdateMenu)
-		router.DELETE("/menu/:id", food_service.DeleteMenu)
-
-		router.GET("/order-detail-menu-options", food_service.GetAllOrderDetailMenuOptions)
-		router.GET("/order-detail-menu-options/:id", food_service.GetOrderDetailMenuOption)
-		router.POST("/order-detail-menu-options", food_service.CreateOrderDetailMenuOption)
-		router.PUT("/order-detail-menu-options/:id", food_service.UpdateOrderDetailMenuOption)
-		router.DELETE("/order-detail-menu-options/:id", food_service.DeleteOrderDetailMenuOption)
-
-		router.GET("/order-details", food_service.GetAllOrderDetails)
-		router.GET("/order-detail/:id", food_service.GetOrderDetail)
-		router.POST("/order-detail", food_service.CreateOrderDetail)
-		router.PUT("/order-detail/:id", food_service.UpdateOrderDetail)
-		router.DELETE("/order-detail/:id", food_service.DeleteOrderDetail)
-
-		router.GET("/orders", food_service.GetAllOrders)
-		router.GET("/order/:id", food_service.GetOrder)
-		router.POST("/order", food_service.CreateOrder)
-		router.PUT("/order/:id", food_service.UpdateOrder)
-		router.DELETE("/order/:id", food_service.DeleteOrder)
-
-		// เส้นทางการจัดการ MenuItemOption
-		router.GET("/menu-item-options", food_service.GetAllMenuItemOptions)
-		router.GET("/menu-item-option/:id", food_service.GetMenuItemOption)
-		router.POST("/menu-item-option", food_service.CreateMenuItemOption)
-		router.DELETE("/menu-item-option/:id", food_service.DeleteMenuItemOption)
-
-		// เส้นทางการจัดการ MenuOption
-		router.GET("/menu-options", food_service.GetAllMenuOptions)
-		router.POST("/menu-options", food_service.CreateMenuOption)
-		router.PUT("/menu-options/:id", food_service.UpdateMenuOption)
-
-		//
-		r.GET("/orders/pending/:customerID", food_service.GetPendingOrderByCustomerID)
-		r.POST("/add-item-to-order", food_service.AddItemToOrder)
-	}
-
+	// Public Route for Genders
 	r.GET("/genders", genders.GetAll)
 
+	// Root Route
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "API RUNNING... PORT: %s", PORT)
 	})
@@ -101,18 +44,97 @@ func SetupRouter() *gin.Engine {
 	return r
 }
 
-// func CORSMiddleware() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-// 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-// 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-// 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+// Function to setup Authentication routes
+func setupAuthRoutes(r *gin.Engine) {
+	r.POST("/signup", customer.SignUp)
+	r.POST("/signin", customer.SignIn)
+}
 
-// 		if c.Request.Method == "OPTIONS" {
-// 			c.AbortWithStatus(204)
-// 			return
-// 		}
+// Function to setup User routes
+func setupUserRoutes(r *gin.RouterGroup) {
+	r.PUT("/user/:id", customer.Update)
+	r.GET("/users", customer.GetAll)
+	r.GET("/user/:id", customer.Get)
+	r.DELETE("/user/:id", customer.Delete)
+}
 
-// 		c.Next()
-// 	}
-// }
+// Function to setup Payment routes
+func setupPaymentRoutes(r *gin.RouterGroup) {
+	r.GET("/food-service-payments", payment.GetAllFoodServicePayments)
+	r.GET("/food-service-payment/:id", payment.GetFoodServicePayment)
+	r.POST("/food-service-payment", payment.CreateFoodServicePayment)
+	r.PUT("/food-service-payment/:id", payment.UpdateFoodServicePayment)
+	r.DELETE("/food-service-payment/:id", payment.DeleteFoodServicePayment)
+
+	r.GET("/trip-payments", payment.GetAllTripPayments)
+	r.GET("/trip-payment/:id", payment.GetTripPayment)
+	r.POST("/trip-payment", payment.CreateTripPayment)
+	r.PUT("/trip-payment/:id", payment.UpdateTripPayment)
+	r.DELETE("/trip-payment/:id", payment.DeleteTripPayment)
+
+	r.GET("/trip-paymentID-for-food-payment/:id", payment.GetTripPaymentIDForFoodPayment)
+}
+
+// Function to setup Food Service routes
+func setupFoodServiceRoutes(r *gin.RouterGroup) {
+	r.GET("/food-categories", food_service.GetAllFoodCategories)
+	r.GET("/food-category/:id", food_service.GetFoodCategory)
+	r.POST("/food-category", food_service.CreateFoodCategory)
+	r.PUT("/food-category/:id", food_service.UpdateFoodCategory)
+	r.DELETE("/food-category/:id", food_service.DeleteFoodCategory)
+
+	r.GET("/menus", food_service.GetAllMenus)
+	r.GET("/menu/:id", food_service.GetMenu)
+	r.POST("/menu", food_service.CreateMenu)
+	r.PUT("/menu/:id", food_service.UpdateMenu)
+	r.DELETE("/menu/:id", food_service.DeleteMenu)
+
+	r.GET("/order-detail-menu-options", food_service.GetAllOrderDetailMenuOptions)
+	r.GET("/order-detail-menu-option/:id", food_service.GetOrderDetailMenuOption)
+	r.POST("/order-detail-menu-option", food_service.CreateOrderDetailMenuOption)
+	r.PUT("/order-detail-menu-option/:id", food_service.UpdateOrderDetailMenuOption)
+	r.DELETE("/order-detail-menu-option/:id", food_service.DeleteOrderDetailMenuOption)
+
+	r.GET("/order-details", food_service.GetAllOrderDetails)
+	r.GET("/order-detail/:id", food_service.GetOrderDetail)
+	r.POST("/order-detail", food_service.CreateOrderDetail)
+	r.PUT("/order-detail/:id", food_service.UpdateOrderDetail)
+	r.DELETE("/order-detail/:id", food_service.DeleteOrderDetail)
+
+	r.GET("/orders", food_service.GetAllOrders)
+	r.GET("/order/:id", food_service.GetOrder)
+	r.POST("/order", food_service.CreateOrder)
+	r.PUT("/order/:id", food_service.UpdateOrder)
+	r.DELETE("/order/:id", food_service.DeleteOrder)
+
+	
+	r.GET("/menu-item-options", food_service.GetAllMenuItemOptions)
+	r.GET("/menu-item-option/:id", food_service.GetMenuItemOption)
+	r.POST("/menu-item-option", food_service.CreateMenuItemOption)
+	r.DELETE("/menu-item-option/:id", food_service.DeleteMenuItemOption)
+	
+	r.GET("/menu-options", food_service.GetAllMenuOptions)
+	r.POST("/menu-options", food_service.CreateMenuOption)
+	r.PUT("/menu-options/:id", food_service.UpdateMenuOption)
+
+	r.GET("/orders/pending/:id", food_service.GetPendingOrderByCustomerID)
+	r.POST("/add-item-to-order", food_service.AddItemToOrder)
+}
+
+// Function to setup Booking Cabin routes
+func setupBookingCabinRoutes(r *gin.RouterGroup) {
+	r.GET("/booking-cabins", booking_cabin.ListBookingCabins)
+	r.GET("/booking-cabin/:id", booking_cabin.GetBookingCabinByID)
+	r.POST("/booking-cabin", booking_cabin.CreateBookingCabin)
+	r.PUT("/booking-cabin/:id", booking_cabin.UpdateBookingCabinByID)
+
+	r.GET("/cabin-types", booking_cabin.ListCabinTypes)
+}
+
+// Function to setup Booking Trip routes
+func setupBookingTripRoutes(r *gin.RouterGroup) {
+	r.GET("/booking-trips", booking_trip.ListBookingTrips)
+	r.GET("/booking-trip/:id", booking_trip.GetBookingTripByID)
+	r.POST("/booking-trip", booking_trip.CreateBookingTrip)
+	r.PUT("/booking-trip/:id", booking_trip.UpdateBookingTripByID)
+}

@@ -4,7 +4,7 @@ import { useOrder } from "../../context/OrderContext";
 import "./OrderSummary.css";
 
 const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
-  const { filteredOrderDetails } = useOrder(); // Access Context
+  const { filteredOrderDetails, formatPriceWithTwoDecimals } = useOrder(); // Access Context
   const [promoCode, setPromoCode] = useState(""); // State to handle promo code input
   const [discountedTotal, setDiscountedTotal] = useState<number | null>(null); // State to handle discounted total
 
@@ -27,10 +27,10 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
 
   const total = discountedTotal !== null ? discountedTotal : numericSubtotal + vat;
 
-  const formatPrice = (price: number | string) =>
-    new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
-      Number(price)
-    );
+  // const formatPriceWithTwoDecimals = (price: number | string) =>
+  //   new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(
+  //     Number(price)
+  //   );
 
   return (
     <>
@@ -60,15 +60,15 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
             <div className="order-summary-detail">
               <div className="order-summary-subtotal">
                 <p>Subtotal</p>
-                <p>฿ {formatPrice(numericSubtotal.toFixed(2))}</p>
+                <p>฿ {formatPriceWithTwoDecimals(numericSubtotal.toFixed(2))}</p>
               </div>
               <div className="order-summary-vat">
                 <p>VAT (7%)</p>
-                <p>฿ {formatPrice(vat.toFixed(2))}</p>
+                <p>฿ {formatPriceWithTwoDecimals(vat.toFixed(2))}</p>
               </div>
               <div className="order-summary-promotion">
                 <p>Promotion</p>
-                <p>฿ - {discountedTotal !== null ? formatPrice((numericSubtotal + vat - discountedTotal).toFixed(2)) : "0.00"}</p>
+                <p>฿ - {discountedTotal !== null ? formatPriceWithTwoDecimals((numericSubtotal + vat - discountedTotal).toFixed(2)) : "0.00"}</p>
               </div>
             </div>
           </div>
@@ -77,14 +77,14 @@ const OrderSummary: React.FC<{ subtotal: number }> = ({ subtotal }) => {
         <section className="order-summary-footer">
           <div className="order-summary-total">
             <h2>Total</h2>
-            <h2>฿ {formatPrice(total.toFixed(2))}</h2>
+            <h2>฿ {formatPriceWithTwoDecimals(total.toFixed(2))}</h2>
           </div>
-          <Link to={ "/login/food-service/order-summary/checkout"} state={{total: total}}>
+          <Link to={ "/food-service/login/menu/order-summary/checkout"} state={{total: total, VAT: vat}}>
             <button 
               className={`checkout-button${filteredOrderDetails.length > 0 ? "" : " disabled"}`} 
               disabled={filteredOrderDetails.length === 0}
             >
-              Confirm Payment
+              Confirm Order
             </button>
           </Link>
         </section>

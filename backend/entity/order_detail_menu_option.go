@@ -6,9 +6,9 @@ import (
 
 type OrderDetailMenuOptions struct {
 	gorm.Model
-	OrderDetailID    uint
-	OrderDetail      *OrderDetails `gorm:"foreignKey:OrderDetailID;constraint:OnDelete:CASCADE;"`
+	OrderDetailID    uint			`valid:"required~OrderDetailID is required"`
+	OrderDetail      *OrderDetails 	`gorm:"foreignKey:OrderDetailID;constraint:OnDelete:CASCADE;" valid:"-"`
 
-	MenuItemOptionID uint
-	MenuItemOption   *MenuItemOptions `gorm:"foreignKey:MenuItemOptionID;constraint:OnDelete:CASCADE;"`
+	MenuItemOptionID uint				`valid:"required~MenuItemOptionID is required"`
+	MenuItemOption   *MenuItemOptions 	`gorm:"foreignKey:MenuItemOptionID;constraint:OnDelete:CASCADE;" valid:"-"`
 }

@@ -1,5 +1,5 @@
 export interface FoodCategoryInterface {
   ID: number;
-  Name: string;
+  FoodCategoryName: string;
   FoodCategoryImage: string;
 }

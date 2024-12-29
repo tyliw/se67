@@ -4,9 +4,10 @@ import (
 	"fmt"
 	// "project-se67/config"
 	// "project-se67/config"
-	"project-se67/entity"
+	"team03/se67/entity"
 	"time"
 
+	// "gorm.io/gorm"
 	// "gorm.io/gorm"
 )
 
@@ -18,6 +19,7 @@ func SetupUserDatabase() {
 		&entity.Customers{},
  
 		&entity.Genders{},
+
  
 	)
  
@@ -55,11 +57,9 @@ func SetupUserDatabase() {
 		PhoneNumber: "0979989859",
  
 	}
- 
+
 	db.FirstOrCreate(User, &entity.Customers{
- 
 		Email: "sa@gmail.com",
- 
 	})
  
 	fmt.Println("User data has been added to the database.")
