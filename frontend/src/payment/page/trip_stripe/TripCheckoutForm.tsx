@@ -8,11 +8,11 @@ import {
 import "./TripCheckoutForm.css";
 
 interface CheckoutFormProps {
-  total: number;
+  // total: number;
   VAT: number;
 }
 
-export default function TripCheckoutForm({ total, VAT }: CheckoutFormProps) {
+export default function TripCheckoutForm({ VAT }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   // const navigate = useNavigate();
@@ -20,8 +20,8 @@ export default function TripCheckoutForm({ total, VAT }: CheckoutFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   // const { filteredOrderDetails } = useOrder();
 
-  console.log("total", total);
-  console.log("VAT", VAT);
+  // console.log("total", total);
+  // console.log("VAT", VAT);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -62,9 +62,11 @@ export default function TripCheckoutForm({ total, VAT }: CheckoutFormProps) {
     layout: "accordion",
   };
 
-  // useEffect(() => {
-  //   localStorage.setItem("VAT", VAT.toString())
-  // }, []);
+  useEffect(() => {
+    localStorage.setItem("BookingCabinID", (1).toString())
+    localStorage.setItem("BookingTripID", (1).toString())
+    localStorage.setItem("VATTrip", VAT.toString())
+  }, []);
 
   return (
     <>

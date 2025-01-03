@@ -3,9 +3,16 @@ import { BookingCabinInterface } from "../../../booking_cabin/interface/IBooking
 import { message } from "antd";
 import { GetBookingCabinById } from "../../../booking_cabin/service/https/BookingCabinAPI";
 // import { AiOutlineUser } from "react-icons/ai";
-import "./TripSummary.css";
 // import StripeCheckout from '../trip_stripe/StripeCheckout';
+import "./TripSummary.css";
 import TripStripeCheckout from "../trip_stripe/TripStripeCheckout";
+// import { CabinInterface } from "../../../booking_cabin/interface/ICabin";
+import { GetCabinTypeById } from "../../../booking_cabin/service/https/CabinTypeAPI";
+import { CabinTypeInterface } from "../../../booking_cabin/interface/ICabinType";
+import { GetCruiseTripById } from "../../../booking_cabin/service/https/CruiseTripAPI";
+import { CruiseTripInterface } from "../../../booking_cabin/interface/ICruiseTrip";
+import { GetUsersById } from "../../../services/https";
+import { CustomerInterface } from "../../../interfaces/ICustomer";
 
 // function getTextColor(backgroundColor: string): string {
 //   const rgb = backgroundColor.match(/\d+/g)?.map(Number);
@@ -17,16 +24,90 @@ import TripStripeCheckout from "../trip_stripe/TripStripeCheckout";
 
 export default function TripSummary() {
   const [bookingCabin, setBookingCabin] = useState<BookingCabinInterface>();
-  const [messageApi, contextHolder] = message.useMessage();
-  const [total] = useState<number>(10);
-  //   const [textColor, setTextColor] = useState<string>("white");
+  const [cabinType, setCabinType] = useState<CabinTypeInterface>();
+  const [cruiseTrip, setCruiseTrip] = useState<CruiseTripInterface>();
+  const [customer, setCustomer] = useState<CustomerInterface>();
+  const [VAT, setVAT] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
 
-  console.log("bookingCabin", bookingCabin);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  // console.log("bookingCabin", bookingCabin);
+  // console.log("cabinType", cabinType);
+  // console.log("cruiseTrip", cruiseTrip);
+  // console.log("customer", customer);
+
+  const calculateVATAndTotal = () => {
+    const subtotal = bookingCabin?.TotalPrice ?? 0;
+    const vat = subtotal * 0.07;
+    const totalPrice = subtotal + vat;
+
+    setVAT(vat);
+    setTotal(totalPrice);
+  };
+
+  function formatDate(date: Date | string | undefined): string {
+    if (!date) return "N/A"; // fallback if date is undefined
+    const parsedDate = typeof date === "string" ? new Date(date) : date;
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      // timeZoneName: "short",
+    }).format(parsedDate);
+  }
+
+  const formatPriceWithTwoDecimals = (price: number | string | undefined): string => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+    }).format(Number(price ?? 0));
+  };
+  
 
   const getBookingCabin = async () => {
     const res = await GetBookingCabinById(1);
     if (res.status === 200) {
       setBookingCabin(res.data);
+      
+      getCruiseTrip(res.data.BookingTrip.CruiseTripID);
+      getCabinType(res.data.Cabin.CabinTypeID);
+      getCustomer(res.data.BookingTrip.CustomerID);
+    } else {
+      messageApi.open({
+        type: "error",
+        content: res.data.error,
+      });
+    }
+  };
+
+  const getCruiseTrip = async (cruise_tip_id: number) => {
+    const res = await GetCruiseTripById(cruise_tip_id);
+    if (res.status === 200) {
+      setCruiseTrip(res.data);
+    } else {
+      messageApi.open({
+        type: "error",
+        content: res.data.error,
+      });
+    }
+  };
+
+  const getCabinType = async (cabin_type_id: number) => {
+    const res = await GetCabinTypeById(cabin_type_id);
+    if (res.status === 200) {
+      setCabinType(res.data);
+    } else {
+      messageApi.open({
+        type: "error",
+        content: res.data.error,
+      });
+    }
+  };
+
+  const getCustomer = async (customer_id: number) => {
+    const res = await GetUsersById(customer_id);
+    if (res.status === 200) {
+      setCustomer(res.data);
     } else {
       messageApi.open({
         type: "error",
@@ -38,6 +119,12 @@ export default function TripSummary() {
   useEffect(() => {
     getBookingCabin();
   }, []);
+
+  useEffect(() => {
+    if (bookingCabin) {
+      calculateVATAndTotal();
+    }
+  }, [bookingCabin]);
 
   return (
     <>
@@ -52,24 +139,24 @@ export default function TripSummary() {
               <div className="detail">
                 <div className="img-container">
                   <img
-                    src="https://th.bing.com/th/id/OIP.CApLGnxC__cDvQbXNER4BQAAAA?rs=1&pid=ImgDetMain"
-                    alt=""
+                    src="https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/http://images.ntmllc.com/v4/cruise-ship/CAN/CAN016/CAN016_EXT_Arvia_ZD3F6B/Arvia-Exterior.jpg?tr=w-780%2Ch-437%2Cfo-auto"
+                    alt={cruiseTrip?.CruiseTripName}
                   />
                 </div>
                 <div className="info">
-                  <h1 className="ship-name">Aegean Paradise</h1>
-                  <p>Vietnam & Thailand Cruise</p>
-                  <p>Duration: 10 Night</p>
+                  <h1 className="ship-name">{cruiseTrip?.Ship?.Name} Ship</h1>
+                  <p><strong>Trip:</strong> {cruiseTrip?.CruiseTripName}</p>
+                  <p><strong>Duration:</strong> {cruiseTrip?.ParticNum} Night</p>
 
                   <div className="route">
                     <div className="modal-body">
                       <div className="progress-track">
                         <ul id="progressbar">
                           <li className="departure-left" id="departure">
-                            <p>Jan 12, 2025</p>
+                            <p>{formatDate(cruiseTrip?.StartDate)}</p>
                           </li>
                           <li className="arrival-right" id="arrival">
-                            <p>Jan 22, 2025</p>
+                            <p>{formatDate(cruiseTrip?.EndDate)}</p>
                           </li>
                         </ul>
                       </div>
@@ -88,19 +175,15 @@ export default function TripSummary() {
               <div className="detail">
                 <div className="cabin-img-container">
                   <img
-                    src="https://i.pinimg.com/736x/62/e2/53/62e253823ac09e1ae14b2c0a0b5da72b.jpg"
-                    alt="Interior"
+                    src={cabinType?.Image}
+                    alt={cabinType?.TypeName}
                   />
                 </div>
                 <span>
-                  <p>Cabin Type: Interior</p>
-                  <p>Number: 101</p>
-                  <p>Cabin Size: 96 inch</p>
-                  <p>
-                    Note: A cozy interior cabin with essential amenities, smart
-                    storage, and a comfortable bed. Perfect for solo travelers
-                    or couples seeking a budget-friendly option.
-                  </p>
+                  <p><strong>Cabin Type:</strong> {cabinType?.TypeName}</p>
+                  <p><strong>Number:</strong> {bookingCabin?.Cabin?.CabinNumber}</p>
+                  <p><strong>Cabin Size:</strong> {cabinType?.Cabinsize}</p>
+                  <p><strong>Note:</strong> {bookingCabin?.Note}</p>
                 </span>
               </div>
             </div>
@@ -110,9 +193,10 @@ export default function TripSummary() {
                 <h1 className="header">Contract Details</h1>
               </header>
               <span>
-                <p>Email: sa@gmail.com</p>
-                <p>Name: Software Analysis</p>
-                <p>Phone: 0979989859</p>
+                <p><strong>Email:</strong> {customer?.email}</p>
+                <p><strong>Name:</strong> {customer?.first_name} {customer?.last_name}</p>
+                <p><strong>Phone:</strong> {customer?.phone ? customer?.phone : "-"}</p>
+                <p><strong>Address:</strong> {customer?.Address ? customer?.Address : "-"}</p>
               </span>
             </div>
             <hr />
@@ -120,10 +204,11 @@ export default function TripSummary() {
               <header>
                 <h1 className="header">Select Payment Method</h1>
               </header>
-              <TripStripeCheckout total={total} VAT={70} />
+              <TripStripeCheckout total={total} VAT={VAT} />
             </div>
           </div>
         </div>
+        
         <aside className="trip-summary">
           <div className="inside">
             <header>
@@ -148,20 +233,20 @@ export default function TripSummary() {
             <div className="detail">
               <span>
                 <p>Cruise Trip</p>
-                <p>฿ 50,000</p>
+                <p>฿ {formatPriceWithTwoDecimals(cruiseTrip?.PlanPrice)}</p>
               </span>
               <span>
                 <p>Cabin Price</p>
-                <p>฿ 100,000</p>
+                <p>฿ {formatPriceWithTwoDecimals(cabinType?.CabinPrice)}</p>
               </span>
               {/* <hr /> */}
               <span>
                 <p>Subtotal</p>
-                <p>฿ 150,000</p>
+                <p>฿ {formatPriceWithTwoDecimals(bookingCabin?.TotalPrice)}</p>
               </span>
               <span>
                 <p>VAT (7%)</p>
-                <p>฿ 10,500</p>
+                <p>฿ {formatPriceWithTwoDecimals(VAT)}</p>
               </span>
               <span>
                 <p>Promotion</p>
@@ -169,15 +254,9 @@ export default function TripSummary() {
               </span>
               <span className="total">
                 <h1>Total</h1>
-                <h1 className="price">฿ 160,500</h1>
+                <h1 className="price">฿ {formatPriceWithTwoDecimals(total)}</h1>
               </span>
             </div>
-            {/* <button className="confirm-payment-button" id="submit">
-              Confirm Payment
-            </button> */}
-            {/* <button onClick={() => setTotal(20)}>add</button>
-            <div>total: {total}</div>
-            <button onClick={() => setTotal(10)}>minus</button> */}
           </div>
         </aside>
       </section>

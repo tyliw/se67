@@ -20,7 +20,7 @@ func SetupBookingCabinDatabase() {
 		{
 			CheckIn: CheckIn,
 			CheckOut: CheckOut,
-			BookingStatus: "Paid",
+			BookingStatus: "Pending",
 			Note: "-",
 			TotalPrice: 150000,
 			BookingTripID: 1,

@@ -23,15 +23,18 @@ func ConnectionDB() {
 }
 
 func SetupDatabase() {
-   SetupFoodServiceDatabase()
-   SetupPaymentDatabase()
-
-   SetupUserDatabase()
-
-   SetupBookingCabinDatabase()
+   
    SetupCabinTypeDatabase()
+   SetupCabinDatabase()
+   SetupBookingCabinDatabase()
    SetupBookingTripDatabase()
    
+   SetupFoodServiceDatabase()
+   SetupPaymentDatabase()
+   
+   SetupEmployeeDatabase()
+
+   SetupRouteDatabase()
    SetupCruiseTripDatabase()
    
 

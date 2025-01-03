@@ -20,5 +20,4 @@ type FoodServicePayment struct {
 	// TripPaymentID ทำหน้าที่เป็น FK
 	TripPaymentID 	uint			`valid:"required~TripPaymentID is required"`
 	TripPayment   	*TripPayment 	`gorm:"foreignKey:TripPaymentID;constraint:OnDelete:CASCADE;"`
-
 }

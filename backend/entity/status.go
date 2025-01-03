@@ -4,7 +4,7 @@ package entity
 import "gorm.io/gorm"
 
 
-type Status struct {
+type Stats struct {
 
    gorm.Model
 

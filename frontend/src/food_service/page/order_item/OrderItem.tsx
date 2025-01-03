@@ -152,7 +152,7 @@ const OrderItem: React.FC = () => {
                           >
                             <div className="message">
                               <p>Your order is empty</p>
-                              <button>Order Now</button>
+                              <p className="order-now">Order Now</p>
                             </div>
                           </Link>
                         </div>

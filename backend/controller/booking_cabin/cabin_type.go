@@ -20,3 +20,22 @@ func ListCabinTypes(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, cabintypes)
 }
+
+
+// GET /cabintype/:id
+func GetCabinTypeByID(c *gin.Context){
+	ID := c.Param("id")
+	var cabintype entity.CabinType
+
+	db := config.DB()
+	results := db.First(&cabintype, ID)
+	if results.Error != nil{
+		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
+		return
+	}
+	if cabintype.ID == 0{
+		c.JSON(http.StatusNoContent, gin.H{})
+		return
+	}
+	c.JSON(http.StatusOK, cabintype)
+}

@@ -21,15 +21,15 @@ type CruiseTrip struct {
 	ParticNum      int `valid:"required~กรอกตัวเลข, description_valid~ใส่จำนวนคน"`
 
 	ShipID      uint
-	// Ship        Ship `gorm:"foreignKey:ShipID"`
+	Ship        Ship `gorm:"foreignKey:ShipID"`
 
 	EmployeesID uint
-	// Employees   Employees `gorm:"foreignKey:EmployeesID"`
+	Employees   Employees `gorm:"foreignKey:EmployeesID"`
 
 	RoutesID    uint
-	// Routes      Routes `gorm:"foreignKey:RoutesID"`
+	Routes      Routes `gorm:"foreignKey:RoutesID"`
 
-	// BookingTrip []BookingTrip `gorm:"foreignKey:CruiseTripID"`
+	BookingTrip []BookingTrip `gorm:"foreignKey:CruiseTripID"`
 
 	// Review []Review `gorm:"foreignKey:CruiseTripID"`
 }

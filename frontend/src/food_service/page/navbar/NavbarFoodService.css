@@ -135,7 +135,7 @@ nav .menu a {
     .back-to-menu {
         position: fixed;
         top: 78px;
-        left: 16px;
+        left: 6vw;
         color: #000;
         z-index: 10;
     }

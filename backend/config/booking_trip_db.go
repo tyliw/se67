@@ -16,7 +16,7 @@ func SetupBookingTripDatabase() {
 	BookingTrip := []entity.BookingTrip{
 		{
 			BookingDate: BookingDate,
-			BookingStatus: "Paid",
+			BookingStatus: "Pending",
 			CustomerID: 1,
 			CruiseTripID: 1,
 		},

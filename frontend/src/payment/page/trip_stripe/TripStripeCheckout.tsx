@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import TripCheckoutForm from "./TripCheckoutForm";
-import "./TripStripeCheckout.css";
 import LDSRing from "../../../components/third-party/LDSRing";
+import "./TripStripeCheckout.css";
 
 
 // Make sure to call loadStripe outside of a component’s render to avoid
@@ -26,7 +26,7 @@ export default function TripStripeCheckout({total, VAT}:TripStripeCheckoutFormPr
 
 
   useEffect(() => {
-    console.log("total", total)
+    // console.log("total", total)
       fetch("http://localhost:4242/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -99,7 +99,7 @@ export default function TripStripeCheckout({total, VAT}:TripStripeCheckoutFormPr
       {clientSecret ? (
         <>
           <Elements options={{clientSecret, appearance, loader}} stripe={stripePromise}>
-            <TripCheckoutForm total={total} VAT={VAT}/>
+            <TripCheckoutForm VAT={VAT}/>
           </Elements>
         </>
       ) : (

@@ -53,23 +53,30 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
       font-weight: normal;
-      font-size: max(1vw, 16px);
+      font-size: max(1vw, 14px);
       color: var(--color-disable);
 
-      button {
+      .order-now {
         font-weight: bold;
         font-size: max(1vw, 14px);
         /* width: 100px; */
         /* height: 30px; */
         padding:  0.4vh 1.2vw;
-        border: 3px solid var(--color-theme-main);
+        border: 3px solid var(--color-disable);
         border-radius: 50px;
         cursor: pointer;
-        color: var(--color-theme-main);
+        color: var(--color-disable);
         background-color: white;
-        transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+        transition: background-color 0.25s, color 0.25s, border 0.25s, opacity 0.25s;
+      }
+    }
+    .message:hover {
+      .order-now {
+        color: var(--color-theme-main);
+        border: 3px solid var(--color-theme-main);
+        /* opacity: 0.7; */
       }
     }
   }

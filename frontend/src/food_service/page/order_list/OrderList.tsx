@@ -127,8 +127,8 @@ const OrderList: React.FC = () => {
                   })
                 ) : (
                   <tr style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
-                    <td colSpan={4} style={{ textAlign: "center", opacity: "0.7", height: "80px", padding: "10px" }}>
-                      <span>No items in the order.</span>
+                    <td>
+                      <p style={{fontWeight:"normal"}}>No items in the order.</p>
                     </td>
                   </tr>
                 )}

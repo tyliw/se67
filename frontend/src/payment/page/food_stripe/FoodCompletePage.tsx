@@ -11,6 +11,8 @@ import { UpdateOrderById } from "../../../food_service/service/https/OrderAPI";
 import FoodReceipt from "../receipt/FoodReceipt";
 import "./FoodStripeCheckout.css";
 import "./FoodCompletePage.css"
+import { TripPaymentInterface } from "../../interface/ITripPayment";
+import { GetTripPaymentById, UpdateTripPaymentById } from "../../service/https/TripPaymentAPI";
 // import { GetTripPaymentIDForFoodPayment } from "../payment/service/https/TripPaymentAPI";
 // import { useLocation } from "react-router-dom";
 
@@ -60,24 +62,12 @@ const STATUS_CONTENT_MAP = {
 export default function CompletePage()  {
   const stripe = useStripe();
   const { orderID, tripPayment } = useOrder();
-  const [ VAT, SetVAT ] = useState<number>(0);
-  // const navigate = useNavigate();\
-  // const location = useLocation();
-  // const { VAT } = location.state || {};
 
-  
+  const [foodServicePayment, setFoodServicePayment] = useState<FoodServicePaymentInterface>()
+
   const [status, setStatus] = useState<string>("processing");
   const [intentId, setIntentId] = useState(String);
   const [, setAmount] = useState(Number);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("VAT");
-    console.log("savedData", savedData);  // ตรวจสอบค่าที่เก็บใน localStorage
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      SetVAT(parsedData)
-    }
-  },[]);
 
   useEffect(() => {
     if (!stripe) return;
@@ -95,6 +85,7 @@ export default function CompletePage()  {
       // ป้องกันการสร้างข้อมูลซ้ำ
       const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
       if (hasAlreadyProcessed) {
+        console.log("Payment already processed, skipping...");
         return;
       }
   
@@ -102,9 +93,8 @@ export default function CompletePage()  {
         fetch(`http://localhost:4242/get-payment-method?id=${paymentIntent.payment_method}`)
           .then((response) => response.json())
           .then((data) => {
-  
-            if (paymentIntent.status === "succeeded" && orderID) {
-              funcCreateFoodServicePayment(paymentIntent.amount / 100,paymentIntent.status, data.type, orderID);
+            if (paymentIntent.status === "succeeded" && orderID && (!foodServicePayment && !localStorage.getItem("foodServicePaymentID"))) {
+              funcCreateFoodServicePayment(paymentIntent.amount / 100, paymentIntent.status, data.type, orderID);
   
               // บันทึกว่า payment นี้ถูกประมวลผลแล้ว
               localStorage.setItem(`processed_${paymentIntent.id}`, "true");
@@ -113,18 +103,21 @@ export default function CompletePage()  {
           .catch((error) => console.error("Error retrieving payment method:", error));
       }
     });
-  }, [stripe, intentId]);
+  }, [stripe, intentId, orderID]);
+  
   
 
   const funcCreateFoodServicePayment = async (price: number, status: string, methodType: string, order_id: number) => {
     // const tripPaymentID = await GetTripPaymentIDForFoodPayment(customerID)
     // console.log("GetTripPaymentIDForFoodPayment", tripPaymentID)
-    if (!tripPayment.ID) return;
+    const VATData = localStorage.getItem("VATFood");
+    if (!tripPayment || !VATData) return;
+    
 
     const foodServicePaymentData: FoodServicePaymentInterface = {
       PaymentDate: new Date(),
       Price: price,
-      VAT: VAT,
+      VAT: JSON.parse(VATData),
       PaymentStatus: status,
       PaymentMethod: methodType,
       OrderID: order_id,
@@ -132,7 +125,10 @@ export default function CompletePage()  {
     };
   
     const resFood = await CreateFoodServicePayment(foodServicePaymentData);
+    // console.log("resFood", )
     if (resFood.status === 201) {
+      setFoodServicePayment(resFood.data)
+      // update order
       const updateOrderData: OrderInterface = {
         OrderDate: new Date(),
         Status: "Paid",
@@ -140,8 +136,8 @@ export default function CompletePage()  {
       
       const resOrder = await UpdateOrderById(order_id, updateOrderData);
       if (resOrder.status === 200) {
-        // Store resFood in localStorage
-        localStorage.setItem("foodServicePaymentID", JSON.stringify(resFood.data.ID));
+        funcUpdateTripPayment(resFood.data)
+        message.success("success to create order.");
       } else {
         message.error("Failed to create order.");
         return;
@@ -152,9 +148,32 @@ export default function CompletePage()  {
     }
   };
 
-  // if (!VAT) {
-  //   return(<div>loading...</div>);
-  // }
+  const funcUpdateTripPayment = async (foodPayment: FoodServicePaymentInterface) => {
+    if (!foodPayment.TripPaymentID) return;
+    
+    // get trip payment
+    const resTrip = await GetTripPaymentById(foodPayment.TripPaymentID);
+    if (resTrip.status === 200) {
+      // console.log("resTrip", resTrip)
+      // update trip payment
+      const updateTripPaymentData: TripPaymentInterface = {
+        TotalPrice: resTrip.data.TotalPrice + foodPayment.Price,
+        VAT: resTrip.data.VAT + foodPayment.VAT,
+      };
+
+      const resUpdateTrip = await UpdateTripPaymentById(resTrip.data.ID, updateTripPaymentData);
+      if (resUpdateTrip.status === 200) {
+        // Store resFood in localStorage
+        localStorage.setItem("foodServicePaymentID", JSON.stringify(foodPayment.ID));
+      } else {
+        message.error("Failed to update trip payment.");
+        return;
+      }
+    } else {
+      message.error("Failed to get trip payment.");
+      return;
+    }
+  }
 
   return (
     <div className="payment-status-container" >
@@ -182,7 +201,7 @@ export default function CompletePage()  {
           <></>
         )} */}
 
-        <a id="retry-button" href="/food-service/login/menu/order">BACK TO HOME</a>
+        <a id="retry-button" href="/food-service/login/menu/order" onClick={() => localStorage.removeItem("VAT")}>BACK TO HOME</a>
       </div>
     </div>
   );

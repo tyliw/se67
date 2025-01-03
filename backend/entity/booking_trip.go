@@ -21,5 +21,5 @@ type BookingTrip struct {
 	Customer   Customers `gorm:"foreignKey:CustomerID"`
 
 	CruiseTripID uint
-	// CruiseTrip   CruiseTrip `gorm:"foreignKey:CruiseTripID"`
+	CruiseTrip   CruiseTrip `gorm:"foreignKey:CruiseTripID"`
 }

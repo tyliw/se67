@@ -89,7 +89,7 @@ export default function FoodReceipt() {
         if (!isNaN(parsedData)) {
           setFoodServicePaymentID(parsedData);
           clearInterval(intervalId);
-          localStorage.removeItem("VAT")
+          
         } else {
           console.error("foodServicePaymentID is not valid in localStorage");
         }
@@ -254,11 +254,11 @@ const handleDownload = async () => {
       <div className="icon-container">
         <div className="print-icon-container"  onClick={() => reactToPrintFn()}>
           <MdLocalPrintshop className="print-icon"></MdLocalPrintshop>
-          <h1>PRINT</h1>
+          <p><strong>PRINT</strong></p>
         </div>
         <div className="download-icon-container"  onClick={handleDownload}>
           <MdFileDownload className="download-icon"></MdFileDownload>
-          <h1>DOWNLOAD</h1>
+          <p><strong>DOWNLOAD</strong></p>
         </div>
       </div>
     </section>

@@ -29,6 +29,7 @@ function SignInPages() {
         location.href = "/food-service/login/menu/order";
       }, 2000);
     } else {
+      setIsLoading(false)
       messageApi.error(res.data.error);
     }
   };

@@ -3,13 +3,13 @@ import { OrderInterface } from "./IOrder";
 
 export interface OrderDetailInterface {
   ID?: number;
-  Quantity: number;
-  Amount: number;
+  Quantity?: number;
+  Amount?: number;
   
-  MenuID: number;
+  MenuID?: number;
   Menu?: MenuInterface;
   
-  OrderID: number;
+  OrderID?: number;
   Order?: OrderInterface;
 }
 

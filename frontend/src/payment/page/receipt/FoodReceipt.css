@@ -2,10 +2,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  font-size: 14px;
+  font-size: 12px;
 
   h1, p {
-    font-size: 14px ;
+    font-size: 12px ;
   }
 
   .receipt-header {
@@ -252,7 +252,7 @@
     font-size: 12px ;
     padding: 10mm;
     h1, p {
-        font-size: 14px ;
+        font-size: 12px ;
     }
   }
 

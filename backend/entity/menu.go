@@ -14,6 +14,4 @@ import (
 	// FoodCategoryID ทำหน้าที่เป็น FK
 	FoodCategoryID 		uint `valid:"required~FoodCategoryID is required"`
 	FoodCategory    	*FoodCategories  `gorm:"foreignKey: FoodCategoryID" valid:"-"`
-
-	// MenuOptions []*MenuOptions `gorm:"many2many:menu_item_options;" valid:"-"`
  }

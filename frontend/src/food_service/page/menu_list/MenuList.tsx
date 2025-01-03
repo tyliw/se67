@@ -18,6 +18,8 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
 
   const getMenus = async () => {
     const res = await GetMenu();
+    console.log("res",res)
+    console.log("res.data",res.data)
     if (res.status === 200) {
       setMenu(res.data);
     } else {
@@ -69,11 +71,13 @@ export default function MenuList({ selectFoodCategory }: MenuListProps) {
             }}
           >
             <div className="menu-item">
-              <img
-                src={item.ImageMenu}
-                alt={item.MenuName}
-                className="menu-item-image"
-              />
+              <div className="menu-item-image-container">
+                <img
+                  src={item.ImageMenu}
+                  alt={item.MenuName}
+                  className="menu-item-image"
+                />
+              </div>
               <div className="menu-item-info">
                 <div className="info">
                   <header>

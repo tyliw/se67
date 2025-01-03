@@ -9,18 +9,24 @@ import Loadable from "./components/third-party/Loadable";
 // import LDSRing from "./components/third-party/LDSRing";
 import SignInPages from "./authentication/Login";
 import DotLoader from "./components/third-party/DotLoader";
-import TripSummary from "./payment/page/trip_summary/TripSummary";
-import TripCompletePage from "./payment/page/trip_stripe/TripCompletePage";
+
+// import TripCompletePage from "./payment/page/trip_stripe/TripCompletePage";
+// import TripSummary from "./payment/page/trip_summary/TripSummary";
+
+// const SignInPages = Loadable(lazy(() => import("./authentication/Login")));
 
 // Food Service
-// const SignInPages = Loadable(lazy(() => import("./authentication/Login")));
 const SignUpPages = Loadable(lazy(() => import("./authentication/Register")));
 const NavbarFoodService = Loadable(lazy(() => import("./food_service/page/navbar/NavbarFoodService")));
 const Menu = Loadable(lazy(() => import("./food_service/page/menu/Menu")));
 const MenuDetail = Loadable(lazy(() => import("./food_service/page/menu_detail/MenuDetail")));
 const OrderSummary = Loadable(lazy(() => import("./food_service/page/order_item/OrderItem")));
-const StripeCheckout = Loadable(lazy(() => import("./payment/page/food_stripe/FoodStripeCheckout")));
-const CompletePage = Loadable(lazy(() => import("./payment/page/food_stripe/FoodCompletePage")));
+
+// Payment
+const FoodStripeCheckout = Loadable(lazy(() => import("./payment/page/food_stripe/FoodStripeCheckout")));
+const FoodCompletePage = Loadable(lazy(() => import("./payment/page/food_stripe/FoodCompletePage")));
+const TripSummary = Loadable(lazy(() => import("./payment/page/trip_summary/TripSummary")));
+const TripCompletePage = Loadable(lazy(() => import("./payment/page/trip_stripe/TripCompletePage")));
 
 const stripePromise = loadStripe("pk_test_51QOxoF4QmAAjQ0QzsimUKy0RcgMxNPvfbmCm6OJurQzEGULD1u2OfTSGfdd0OwpEW0tzpdkQvmQSZKvbq9waUceD00PaT9sjdJ");
 
@@ -66,7 +72,7 @@ const RouterComponent: React.FC = () => {
         {
           path: "order-summary/checkout",
           element: (    
-              <StripeCheckout />
+              <FoodStripeCheckout />
           ),
         },
       ],
@@ -76,7 +82,7 @@ const RouterComponent: React.FC = () => {
       element: (
         <OrderProvider>
         <Elements stripe={stripePromise}>
-              <CompletePage />
+              <FoodCompletePage />
           </Elements>
         </OrderProvider>
       ),

@@ -28,9 +28,9 @@ type Employees struct {
    RoleID  uint      `json:"roles_id"`
    Role    *Roles  `gorm:"foreignKey: RoleID" json:"role"`
 
-   StatusID uint	 `json:"status_id"`
-   Status  *Status `gorm:"foreignKey: StatusID" json:"status"`
+   StatID uint	 `json:"stat_id"`
+   Stat  *Stats `gorm:"foreignKey: StatID" json:"stat"`
 
-   CruiseShipID uint	 `json:"cruiseship_id"`
-//   CruiseShip  *CruiseShip `gorm:"foreignKey: CruiseShipID" json:"cruiseship"`
+   ShipID uint	 `json:"ship_id"`
+   Ship  *Ship `gorm:"foreignKey: ShipID" json:"ship"`
 }

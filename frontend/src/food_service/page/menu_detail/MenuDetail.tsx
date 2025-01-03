@@ -159,7 +159,7 @@ const MenuDetail: React.FC = () => {
             </div>
           </div>
 
-          <form className="menu-detail-content-container" onSubmit={(event) => event.preventDefault()}>
+          <section className="menu-detail-content-container" onSubmit={(event) => event.preventDefault()}>
             <div className="menu-detail-content">
               <div className="header">
                 <h1>{menuDetailSelect?.MenuName}</h1>
@@ -247,7 +247,7 @@ const MenuDetail: React.FC = () => {
                 </div>
               </section>
             </div>
-          </form>
+          </section>
         </section>
       </div>
     </>

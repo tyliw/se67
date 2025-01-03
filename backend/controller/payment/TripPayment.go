@@ -13,7 +13,7 @@ func GetAllTripPayments(c *gin.Context) {
 	var tripPayments []entity.TripPayment
 	db := config.DB()
 
-	if err := db.Find(&tripPayments).Error; err != nil {
+	if err := db.Preload("BookingCabin").Find(&tripPayments).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
@@ -26,7 +26,7 @@ func GetTripPayment(c *gin.Context) {
 	var tripPayment entity.TripPayment
 	db := config.DB()
 
-	if err := db.First(&tripPayment, ID).Error; err != nil {
+	if err := db.Preload("BookingCabin").First(&tripPayment, ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}

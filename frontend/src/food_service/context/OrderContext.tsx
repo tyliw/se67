@@ -26,7 +26,7 @@ interface OrderContextType {
   totalAmount: number;
   orderID: number;
   customerID: number;
-  tripPayment: TripPaymentInterface;
+  tripPayment?: TripPaymentInterface;
   searchInput: string;
   addItem: (order: Order) => void;
   removeItem: (MenuDetailID: number) => void;
@@ -197,7 +197,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
   };
 
   const increaseQuantityItem = async (OrderDetail: OrderDetailInterface) => {
-
+    if (!OrderDetail || !OrderDetail.Quantity || !OrderDetail.Amount) {
+      message.error("OrderDetail is undefined");
+      return;
+    }
+    
     const newQuantity = OrderDetail.Quantity + 1;
     const newAmount = OrderDetail.Amount + (OrderDetail.Amount/ OrderDetail.Quantity);
   
@@ -222,6 +226,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
   };
   
   const decreaseQuantityItem = async (OrderDetail: OrderDetailInterface) => {
+    if (!OrderDetail || !OrderDetail.Quantity || !OrderDetail.Amount) {
+      message.error("OrderDetail is undefined");
+      return;
+    }
+    
     if (OrderDetail.Quantity > 1) {
       const newQuantity = OrderDetail.Quantity - 1;
       const newAmount = OrderDetail.Amount - (OrderDetail.Amount/ OrderDetail.Quantity);

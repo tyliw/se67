@@ -1,13 +1,16 @@
 import { CustomerInterface } from "../../interfaces/ICustomer"
+import { CruiseTripInterface } from "./ICruiseTrip"
 
 export interface BookingTripInterface {
-    BookingDate:    Date,
-    BookingStatus:  string,
-    NumberOfGuests: number,
+    ID?: number,
+    BookingDate?:    Date,
+    BookingStatus?:  string,
+    NumberOfGuests?: number,
     // BookingCabins []Cabin `gorm:"foreignKey:BookingTripID"`
 
-    CustomerID: number,
-    Customer:   CustomerInterface 
+    CustomerID?: number,
+    Customer?:   CustomerInterface,
 
-    CruiseTripID: number
+    CruiseTripID?: number,
+    CruiseTrip?: CruiseTripInterface,
 }

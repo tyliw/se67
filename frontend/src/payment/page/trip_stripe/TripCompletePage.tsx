@@ -3,7 +3,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import "./TripStripeCheckout.css";
-import { useOrder } from "../../../food_service/context/OrderContext";
+// import { useOrder } from "../../../food_service/context/OrderContext";
 // import { FoodServicePaymentInterface } from "../../interface/IFoodServicePayment";
 // import { CreateFoodServicePayment } from "../../service/https/FoodServicePaymentAPI";
 // import { message } from "antd";
@@ -11,6 +11,14 @@ import { useOrder } from "../../../food_service/context/OrderContext";
 // import { UpdateOrderById } from "../../../food_service/service/https/OrderAPI";
 // import FoodReceipt from "../receipt/FoodReceipt";
 import "./TripCompletePage.css"
+import { TripPaymentInterface } from "../../interface/ITripPayment";
+import { CreateTripPayment } from "../../service/https/TripPaymentAPI";
+import { BookingCabinInterface } from "../../../booking_cabin/interface/IBookingCabin";
+import { UpdateBookingCabinById } from "../../../booking_cabin/service/https/BookingCabinAPI";
+import { message } from "antd";
+import { BookingTripInterface } from "../../../booking_cabin/interface/IBookingTrip";
+import { UpdateBookingTripById } from "../../../booking_cabin/service/https/BookingTripAPI";
+import TripReceipt from "../receipt/TripReceipt";
 // import { GetTripPaymentIDForFoodPayment } from "../payment/service/https/TripPaymentAPI";
 // import { useLocation } from "react-router-dom";
 
@@ -59,112 +67,170 @@ const STATUS_CONTENT_MAP = {
 
 export default function TripCompletePage()  {
   const stripe = useStripe();
-  const { orderID, tripPayment } = useOrder();
-  const [ VAT, SetVAT ] = useState<number>(0);
+  const [ messageApi, contextHolder ] = message.useMessage();
+  // const { orderID, tripPayment } = useOrder();
+  // const [ VAT, SetVAT ] = useState<number>(0);
+  // const [ bookingCabinID, SetBookingCabinIDData ] = useState<number>(0);
+  // const [ bookingTripID, SetBookingTripIDData ] = useState<number>(0);
+  const [tripPayment, setTripPayment] = useState<TripPaymentInterface>()
+
+  // const [ loading, setLoading] = useState<boolean>(false) 
   // const navigate = useNavigate();\
   // const location = useLocation();
   // const { VAT } = location.state || {};
-  console.log("CompletePage VAT", VAT)
+
 
   
   const [status, setStatus] = useState<string>("processing");
   const [intentId, setIntentId] = useState(String);
   const [, setAmount] = useState(Number);
 
-  useEffect(() => {
-    const savedData = localStorage.getItem("VAT");
-    console.log("savedData", savedData);  // ตรวจสอบค่าที่เก็บใน localStorage
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      SetVAT(parsedData)
-    }
-  },[]);
+  // console.log("tripPayment", tripPayment)
+  // console.log("localStorage.getItem(TripPaymentID)", localStorage.getItem("TripPaymentID"))
+  
+  // if (!tripPayment && !localStorage.getItem("TripPaymentID")) {
+  //   console.log("in not")
+  // }
 
-  useEffect(() => {
-    if (!stripe) return;
+  // useEffect(() => {
+    
+  // },[]);
+
+    useEffect(() => {
+      const VATData = localStorage.getItem("VATTrip");
+      const BookingCabinIDData= localStorage.getItem("BookingCabinID");
+      const BookingTripIDData= localStorage.getItem("BookingTripID");
+
+      if (VATData && BookingCabinIDData && BookingTripIDData) {
+        const parsedVATData = JSON.parse(VATData);
+        const parsedBookingCabinIDData = JSON.parse(BookingCabinIDData);
+        const parsedBookingTripIDData = JSON.parse(BookingCabinIDData);
+        // SetVAT(parsedVATData)
+        // SetBookingCabinIDData(parsedBookingCabinIDData)
+        // SetBookingTripIDData(parsedBookingTripIDData)
+        if (!stripe) return;
+      
+        const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
+        if (!clientSecret) return;
+      
+        stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+          if (!paymentIntent) return;
+      
+          setStatus(paymentIntent.status);
+          setIntentId(paymentIntent.id);
+          setAmount(paymentIntent.amount / 100);
+      
+          // ป้องกันการสร้างข้อมูลซ้ำ
+          const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
+          if (hasAlreadyProcessed) {
+            console.log("Payment already processed, skipping...");
+            return;
+          }
+      
+          if (paymentIntent.payment_method) {
+            fetch(`http://localhost:4242/get-payment-method?id=${paymentIntent.payment_method}`)
+              .then((response) => response.json())
+              .then((data) => {
+                if (paymentIntent.status === "succeeded" && parsedBookingCabinIDData && parsedBookingTripIDData && (!tripPayment && !localStorage.getItem("TripPaymentID"))) {
+                  funcCreateFoodTripPayment(paymentIntent.amount / 100, paymentIntent.status, data.type, parsedBookingCabinIDData, parsedBookingTripIDData, parsedVATData);
+      
+                  // บันทึกว่า payment นี้ถูกประมวลผลแล้ว
+                  localStorage.setItem(`processed_${paymentIntent.id}`, "true");
+                }
+              })
+              .catch((error) => console.error("Error retrieving payment method:", error));
+          }
+        });
+      }
+
+    }, [stripe, intentId, tripPayment]);
+
+  const funcCreateFoodTripPayment = async (price: number, status: string, methodType: string, booking_cabin_id: number, booking_trip_id: number, vat: number) => {
+    // setLoading(true)
+
+    const tripPaymentData: TripPaymentInterface = {
+      PaymentDate: new Date(),
+      TotalPrice: price,
+      VAT: vat,
+      PaymentStatus: status,
+      PaymentMethod: methodType,
+      BookingCabinID: booking_cabin_id,
+    };
   
-    const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
-    if (!clientSecret) return;
-  
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      if (!paymentIntent) return;
-  
-      setStatus(paymentIntent.status);
-      setIntentId(paymentIntent.id);
-      setAmount(paymentIntent.amount / 100);
-  
-      // ป้องกันการสร้างข้อมูลซ้ำ
-      const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
-      if (hasAlreadyProcessed) {
+    const resTrip = await CreateTripPayment(tripPaymentData);
+    if (resTrip.status === 201) {
+      setTripPayment(resTrip.data)
+      // update booking cabin 
+      const updateBookingCabinData: BookingCabinInterface = {
+        BookingStatus: "Paid",
+      };
+
+      // console.log("resTrip", resTrip)
+      
+      const resBookingCabin = await UpdateBookingCabinById(booking_cabin_id, updateBookingCabinData);
+      if (resBookingCabin.status === 200) {
+        // update booking trip
+        const updateBookingTripData: BookingTripInterface = {
+          BookingStatus: "Paid",
+        }
+
+        const resBookingTrip = await UpdateBookingTripById(booking_trip_id, updateBookingTripData);
+        if (resBookingTrip.status === 200) {
+          // messageApi.open({
+          //   type: "success",
+          //   content: "update Booking Trip success",
+          // });
+          message.success("success to create payment.");
+          // setLoading(false)
+          localStorage.setItem("TripPaymentID", resTrip.data.ID)
+        }else {
+          messageApi.open({
+            type: "error",
+            content: resBookingTrip.data.error,
+          });
+          return;
+        }
+        // localStorage.setItem("foodServicePaymentID", JSON.stringify(resBookingCabin.data.ID));
+        
+      } else {
+        messageApi.open({
+          type: "error",
+          content: resBookingCabin.data.error,
+        });
         return;
       }
-  
-      if (paymentIntent.payment_method) {
-        fetch(`http://localhost:4242/get-payment-method?id=${paymentIntent.payment_method}`)
-          .then((response) => response.json())
-          .then((data) => {
-  
-            if (paymentIntent.status === "succeeded" && orderID) {
-              // funcCreateFoodServicePayment(paymentIntent.amount / 100,paymentIntent.status, data.type, orderID);
-  
-              // บันทึกว่า payment นี้ถูกประมวลผลแล้ว
-              localStorage.setItem(`processed_${paymentIntent.id}`, "true");
-            }
-          })
-          .catch((error) => console.error("Error retrieving payment method:", error));
-      }
-    });
-  }, [stripe, intentId]);
-  
+    } else {
+      messageApi.open({
+        type: "error",
+        content: resTrip.data.error,
+      });
+      return;
+    }
+  };
 
-  // const funcCreateFoodServicePayment = async (price: number, status: string, methodType: string, order_id: number) => {
-
-  //   if (!tripPayment.ID) return;
-
-  //   const foodServicePaymentData: FoodServicePaymentInterface = {
-  //     PaymentDate: new Date(),
-  //     Price: price,
-  //     VAT: VAT,
-  //     PaymentStatus: status,
-  //     PaymentMethod: methodType,
-  //     OrderID: order_id,
-  //     TripPaymentID: tripPayment.ID,
-  //   };
-  
-  //   const resFood = await CreateFoodServicePayment(foodServicePaymentData);
-  //   if (resFood.status === 201) {
-  //     const updateOrderData: OrderInterface = {
-  //       OrderDate: new Date(),
-  //       Status: "Paid",
-  //     };
-      
-  //     const resOrder = await UpdateOrderById(order_id, updateOrderData);
-  //     if (resOrder.status === 200) {
-  //       localStorage.setItem("foodServicePaymentID", JSON.stringify(resFood.data.ID));
-  //     } else {
-  //       message.error("Failed to create order.");
-  //       return;
-  //     }
-  //   } else {
-  //     message.error("Failed to create FoodServicePayment.");
-  //     return;
-  //   }
-  // };
+  const handleClickBack = async () => {
+    localStorage.removeItem("TripPaymentID")
+    localStorage.removeItem("BookingCabinID")
+    localStorage.removeItem("BookingTripID")
+    localStorage.removeItem("VATTrip")
+    location.href="/trip-summary"
+}
 
   return (
     <div className="payment-status-container" >
-      
+      {contextHolder}
       <div id="payment-status" >
         <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}} >
           {STATUS_CONTENT_MAP[status].icon}
         </div>
         <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
         {intentId && status == "succeeded" && <div id="details-table" >
+          <TripReceipt/>
           {/* <section>
             <FoodReceipt></FoodReceipt>
           </section> */}
         </div>}
-        <a id="retry-button" href="/trip-summary">BACK TO HOME</a>
+        <a id="retry-button" onClick={() => handleClickBack()}>BACK TO HOME</a>
       </div>
     </div>
   );

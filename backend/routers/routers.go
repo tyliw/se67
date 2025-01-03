@@ -4,10 +4,12 @@ import (
 	"net/http"
 	"team03/se67/controller/booking_cabin"
 	"team03/se67/controller/booking_trip"
-	"team03/se67/controller/customer"
+	"team03/se67/controller/cruise_trip"
+	"team03/se67/controller/customers"
 	"team03/se67/controller/food_service"
 	"team03/se67/controller/genders"
 	"team03/se67/controller/payment"
+
 	"team03/se67/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -32,6 +34,7 @@ func SetupRouter() *gin.Engine {
 	setupFoodServiceRoutes(private)
 	setupBookingCabinRoutes(private)
 	setupBookingTripRoutes(private)
+	setupCruiseTripRoutes(private)
 
 	// Public Route for Genders
 	r.GET("/genders", genders.GetAll)
@@ -46,16 +49,16 @@ func SetupRouter() *gin.Engine {
 
 // Function to setup Authentication routes
 func setupAuthRoutes(r *gin.Engine) {
-	r.POST("/signup", customer.SignUp)
-	r.POST("/signin", customer.SignIn)
+	r.POST("/signup", customers.SignUp)
+	r.POST("/signin", customers.SignIn)
 }
 
 // Function to setup User routes
 func setupUserRoutes(r *gin.RouterGroup) {
-	r.PUT("/user/:id", customer.Update)
-	r.GET("/users", customer.GetAll)
-	r.GET("/user/:id", customer.Get)
-	r.DELETE("/user/:id", customer.Delete)
+	r.PUT("/user/:id", customers.Update)
+	r.GET("/users", customers.GetAll)
+	r.GET("/user/:id", customers.Get)
+	r.DELETE("/user/:id", customers.Delete)
 }
 
 // Function to setup Payment routes
@@ -129,6 +132,7 @@ func setupBookingCabinRoutes(r *gin.RouterGroup) {
 	r.PUT("/booking-cabin/:id", booking_cabin.UpdateBookingCabinByID)
 
 	r.GET("/cabin-types", booking_cabin.ListCabinTypes)
+	r.GET("/cabin-type/:id", booking_cabin.GetCabinTypeByID)
 }
 
 // Function to setup Booking Trip routes
@@ -137,4 +141,12 @@ func setupBookingTripRoutes(r *gin.RouterGroup) {
 	r.GET("/booking-trip/:id", booking_trip.GetBookingTripByID)
 	r.POST("/booking-trip", booking_trip.CreateBookingTrip)
 	r.PUT("/booking-trip/:id", booking_trip.UpdateBookingTripByID)
+}
+
+// Function to setup Booking Trip routes
+func setupCruiseTripRoutes(r *gin.RouterGroup) {
+	r.GET("/cruise-trips", cruise_trip.ListCruiseTrips)
+	r.GET("/cruise-trip/:id", cruise_trip.GetCruiseTrip)
+	// r.POST("/cruise-trip", cruise_trip.CreateBookingTrip)
+	// r.PUT("/cruise-trip/:id", cruise_trip.UpdateBookingTripByID)
 }

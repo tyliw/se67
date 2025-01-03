@@ -95,7 +95,7 @@ const NavbarFoodService: React.FC = () => {
             >
               <div>
                 <AiOutlineUser size={30} />
-                <span>{user?.FirstName} {user?.LastName}</span>
+                <span>{user?.first_name} {user?.last_name}</span>
               </div>
             </Tooltip>
 

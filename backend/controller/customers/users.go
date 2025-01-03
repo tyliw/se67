@@ -1,4 +1,4 @@
-package customer
+package customers
 
 
 import (
@@ -8,10 +8,9 @@ import (
 
    "github.com/gin-gonic/gin"
 
-
    "team03/se67/config"
 
-   "team03/se67/entity"
+   	"team03/se67/entity"
 
 )
 
@@ -128,14 +127,14 @@ func Delete(c *gin.Context) {
 
    db := config.DB()
 
-   if tx := db.Exec("DELETE FROM users WHERE id = ?", id); tx.RowsAffected == 0 {
+   if tx := db.Exec("DELETE FROM customers WHERE id = ?", id); tx.RowsAffected == 0 {
 
-       c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+       c.JSON(http.StatusBadRequest, gin.H{"error": "ERROR: ID NOT FOUND"})
 
        return
 
    }
 
-   c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+   c.JSON(http.StatusOK, gin.H{"message": "Deleted Account Successful"})
 
 }

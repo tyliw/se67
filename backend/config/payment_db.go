@@ -17,8 +17,8 @@ func SetupPaymentDatabase() {
 	// Create sample TripPayment
 	tripPayment := entity.TripPayment{
 		PaymentDate:    time.Now(),
-		TotalPrice:     100.0,
-		VAT:			7,
+		TotalPrice:     160870.0,
+		VAT:			10525.9,
 		PaymentStatus:  "succeeded",
 		PaymentMethod:  "promptpay",
 		BookingCabinID: 1,
