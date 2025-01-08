@@ -114,8 +114,8 @@ func SetupFoodServiceDatabase() {
 	// สร้างตัวอย่าง Order
 	order1 := entity.Orders{
 		OrderDate:   time.Now(),
-		TotalAmount: 290.00, // ตัวอย่างจำนวนเงินรวม
-		Status: "Paid",
+		TotalAmount: 540.00, // ตัวอย่างจำนวนเงินรวม
+		StatusID: 4,
 		CustomerID:  1,      // ตัวอย่าง Customer ID
 	}
 	db.FirstOrCreate(&order1)

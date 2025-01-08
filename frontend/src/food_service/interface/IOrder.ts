@@ -1,10 +1,13 @@
+import { StatusInterface } from "../../booking_cabin/interface/IStatus";
 import { CustomerInterface } from "../../interfaces/ICustomer";
 
 export interface OrderInterface {
   ID?: number;
   OrderDate?: Date;
   TotalAmount?: number;
-  Status?: string;
+  
+  StatusID?: number;
+  Status?: StatusInterface;
   
   CustomerID?: number;
   Customer?: CustomerInterface;

@@ -66,13 +66,13 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       return; // หยุดการทำงานถ้า orderID ยังไม่ถูกตั้งค่า
     }
   
-    const totalAmount = orderDetail.reduce((sum, detail) => sum + detail.Amount, 0);
+    const totalAmount = orderDetail.reduce((sum, detail) => sum + (detail.Amount ?? 0), 0);
   
     try {
       const updatedOrder: OrderInterface = {
         TotalAmount: totalAmount,
         OrderDate: new Date(),
-        Status: "Pending",
+        StatusID: 4,
         CustomerID: customerID,
       };
   
@@ -138,7 +138,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({children
       const newOrderData: OrderInterface = {
         OrderDate: new Date(),
         TotalAmount: 0, // ค่าเริ่มต้น
-        Status: "Pending",
+        StatusID: 4,
         CustomerID: customerID || 0,
       };
         

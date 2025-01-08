@@ -74,9 +74,13 @@ func SetupEmployeeDatabase() {
    Working := entity.Stats{Status: "Working"}
    Sick := entity.Stats{Status: "Sick"}
    OnLeave := entity.Stats{Status: "On Leave"}
+   Pending := entity.Stats{Status: "Pending"}
+   Paid := entity.Stats{Status: "Paid"}
    db.FirstOrCreate(&Working, &entity.Stats{Status: "Working"})
    db.FirstOrCreate(&Sick, &entity.Stats{Status: "Sick"})
    db.FirstOrCreate(&OnLeave, &entity.Stats{Status: "On Leave"})
+   db.FirstOrCreate(&Pending, &entity.Stats{Status: "Pending"})
+   db.FirstOrCreate(&Paid, &entity.Stats{Status: "Paid"})
 
 
    hashedPassword02, _ := HashPassword("123456")

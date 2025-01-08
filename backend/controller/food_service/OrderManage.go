@@ -29,7 +29,7 @@ func GetPendingOrderByCustomerID(c *gin.Context) {
 	// ดึง Order ที่มีสถานะ Pending และ CustomerID ตรงกัน
 	if err := db.Preload("OrderDetails").
 		Preload("OrderDetails.Menu").
-		Where("customer_id = ? AND status = ?", customerID, "Pending").
+		Where("customer_id = ? AND status_id = ?", customerID, 4).
 		First(&order).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "No pending orders found for this customer"})
 		return

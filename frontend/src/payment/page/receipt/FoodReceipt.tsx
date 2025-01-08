@@ -22,14 +22,11 @@ export default function FoodReceipt() {
   const [messageApi, contextHolder] = message.useMessage();
   const [customer, setCustomer] = useState<CustomerInterface>();
   const [orderDetail, setOrderDetail] = useState<OrderDetailInterface[]>([]);
-  const [, setIsLoaded] = useState(false); // Track if data is loaded
+  // const [, setIsLoaded] = useState(false); // Track if data is loaded
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
-  // const total = foodServicePayment?.Price ? foodServicePayment.Price : 0;
-  // const vat = total ? (total - total / 1.07) : 0;
-  // const subtotal = total && vat ? total - vat : 0;
   const formatPriceWithTwoDecimals = (price: number | string): string => {
     return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -58,7 +55,6 @@ export default function FoodReceipt() {
     const res = await GetFoodServicePaymentById(foodServicePaymentID);
     if (res.status === 200) {
       setFoodServicePayment(res.data);
-      console.log("res.data.Order.CustomerID", res.data.Order.CustomerID);
       getCustomerByID(res.data.Order.CustomerID);
     } else {
       messageApi.open({
@@ -83,7 +79,7 @@ export default function FoodReceipt() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const savedData = localStorage.getItem("foodServicePaymentID");
-      console.log("savedData", savedData);  // ตรวจสอบค่าที่เก็บใน localStorage
+      // console.log("savedData", savedData);  // ตรวจสอบค่าที่เก็บใน localStorage
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         if (!isNaN(parsedData)) {
@@ -105,14 +101,14 @@ export default function FoodReceipt() {
       getOrderDetail();
       getFoodServicePaymentById();
     }
-  }, [foodServicePaymentID]);
+  }, [foodServicePaymentID]);  
 
-  useEffect(() => {
-    // Set isLoaded when all data is ready (foodServicePayment, customer, orderDetails)
-    if (foodServicePayment && customer && orderDetail.length > 0) {
-      setIsLoaded(true);
-    }
-  }, [foodServicePayment, customer, orderDetail]);
+  // useEffect(() => {
+  //   // Set isLoaded when all data is ready (foodServicePayment, customer, orderDetails)
+  //   if (foodServicePayment && customer && orderDetail.length > 0) {
+  //     setIsLoaded(true);
+  //   }
+  // }, [foodServicePayment, customer, orderDetail]);
 
 
   // Filter order details where OrderID matches the OrderID in foodServicePayment
@@ -217,9 +213,9 @@ const handleDownload = async () => {
           {filteredOrderDetails.map((detail, index) => (
             <tr key={detail.ID}>
               <td className="menu-name">{index + 1}. {detail.Menu?.MenuName}</td>
-              <td className="quantity">{formatPriceWithTwoDecimals(detail.Quantity)}</td>
-              <td className="unit-price">{formatPriceWithTwoDecimals(detail.Amount / detail.Quantity)}</td>
-              <td className="amount">{formatPriceWithTwoDecimals(detail.Amount)}</td>
+              <td className="quantity">{formatPriceWithTwoDecimals(detail.Quantity ?? 0)}</td>
+              <td className="unit-price">{formatPriceWithTwoDecimals((detail.Amount ?? 0) / (detail.Quantity ?? 0))}</td>
+              <td className="amount">{formatPriceWithTwoDecimals(detail.Amount ?? 0)}</td>
             </tr>
           ))}
         </tbody>

@@ -123,6 +123,9 @@ export default function TripCompletePage()  {
           // ป้องกันการสร้างข้อมูลซ้ำ
           const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
           if (hasAlreadyProcessed) {
+            if (!localStorage.getItem("TripPaymentID")) {
+              setStatus("default")
+            }
             console.log("Payment already processed, skipping...");
             return;
           }
@@ -132,7 +135,7 @@ export default function TripCompletePage()  {
               .then((response) => response.json())
               .then((data) => {
                 if (paymentIntent.status === "succeeded" && parsedBookingCabinIDData && parsedBookingTripIDData && (!tripPayment && !localStorage.getItem("TripPaymentID"))) {
-                  funcCreateFoodTripPayment(paymentIntent.amount / 100, paymentIntent.status, data.type, parsedBookingCabinIDData, parsedBookingTripIDData, parsedVATData);
+                  funcCreateTripPayment(paymentIntent.amount / 100, paymentIntent.status, data.type, parsedBookingCabinIDData, parsedBookingTripIDData, parsedVATData);
       
                   // บันทึกว่า payment นี้ถูกประมวลผลแล้ว
                   localStorage.setItem(`processed_${paymentIntent.id}`, "true");
@@ -145,7 +148,7 @@ export default function TripCompletePage()  {
 
     }, [stripe, intentId, tripPayment]);
 
-  const funcCreateFoodTripPayment = async (price: number, status: string, methodType: string, booking_cabin_id: number, booking_trip_id: number, vat: number) => {
+  const funcCreateTripPayment = async (price: number, status: string, methodType: string, booking_cabin_id: number, booking_trip_id: number, vat: number) => {
     // setLoading(true)
 
     const tripPaymentData: TripPaymentInterface = {
@@ -213,6 +216,14 @@ export default function TripCompletePage()  {
     localStorage.removeItem("BookingCabinID")
     localStorage.removeItem("BookingTripID")
     localStorage.removeItem("VATTrip")
+
+        // ลบ processed_{paymentIntent.id}
+    const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
+    if (clientSecret) {
+      const paymentIntentId = clientSecret.split("_secret")[0]; // ดึง paymentIntent.id จาก clientSecret
+      localStorage.removeItem(`processed_${paymentIntentId}`);
+    }
+
     location.href="/trip-summary"
 }
 
@@ -224,12 +235,11 @@ export default function TripCompletePage()  {
           {STATUS_CONTENT_MAP[status].icon}
         </div>
         <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
-        {intentId && status == "succeeded" && <div id="details-table" >
-          <TripReceipt/>
-          {/* <section>
-            <FoodReceipt></FoodReceipt>
-          </section> */}
-        </div>}
+        {intentId && status == "succeeded" &&
+          <div id="details-table" >
+            <TripReceipt/>
+          </div>
+        }
         <a id="retry-button" onClick={() => handleClickBack()}>BACK TO HOME</a>
       </div>
     </div>
