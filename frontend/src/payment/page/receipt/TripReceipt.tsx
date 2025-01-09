@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { Link } from "react-router-dom";
 import { TripPaymentInterface } from "../../interface/ITripPayment";
 import { message } from "antd";
@@ -42,16 +42,16 @@ function TripReceipt() {
     }).format(Number(price));
   };
 
-  function formatDate(date: Date | string | undefined): string {
-    if (!date) return "N/A"; // fallback if date is undefined
-    const parsedDate = typeof date === "string" ? new Date(date) : date;
-    return new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      // timeZoneName: "short",
-    }).format(parsedDate);
-  }
+  // function formatDate(date: Date | string | undefined): string {
+  //   if (!date) return "N/A"; // fallback if date is undefined
+  //   const parsedDate = typeof date === "string" ? new Date(date) : date;
+  //   return new Intl.DateTimeFormat("en-GB", {
+  //     day: "2-digit",
+  //     month: "short",
+  //     year: "numeric",
+  //     // timeZoneName: "short",
+  //   }).format(parsedDate);
+  // }
 
   const formattedDate = tripPayment?.PaymentDate
     ? dayjs(tripPayment.PaymentDate).format("DD/MM/YYYY") // Adjust format as needed
@@ -227,7 +227,7 @@ function TripReceipt() {
             <span className="name">
               {customer?.first_name} {customer?.last_name}
             </span>
-            <span className="address">{customer?.Adress}</span>
+            <span className="address">{customer?.Address}</span>
           </div>
         </div>
         <div className="receipt-detail">
@@ -268,7 +268,7 @@ function TripReceipt() {
                 </p>
               </span>
             </td>
-            <td className="amount">{formatPriceWithTwoDecimals(bookingTrip?.CruiseTrip?.PlanPrice)}</td>
+            <td className="amount">{formatPriceWithTwoDecimals(bookingTrip?.CruiseTrip?.PlanPrice ?? 0)}</td>
           </tr>
           <tr>
             <td className="number">2</td>
@@ -279,7 +279,7 @@ function TripReceipt() {
                 <p>Cabin Type: {cabinType?.TypeName}</p>
               </span>
             </td>
-            <td className="amount">{formatPriceWithTwoDecimals(cabinType?.CabinPrice)}</td>
+            <td className="amount">{formatPriceWithTwoDecimals(cabinType?.CabinPrice ?? 0)}</td>
           </tr>
         </tbody>
       </table>
@@ -292,7 +292,7 @@ function TripReceipt() {
           </tr>
           <tr>
             <th>VAT 7%</th>
-            <td>{formatPriceWithTwoDecimals(tripPayment?.VAT ?? 0)}</td>
+            <td>{formatPriceWithTwoDecimals(tripPayment?.TotalVAT ?? 0)}</td>
           </tr>
           <tr>
             <th>Subtotal</th>

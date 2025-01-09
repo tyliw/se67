@@ -64,3 +64,20 @@ func TestInvalidMenuOptionsInput(t *testing.T) {
 		g.Expect(err.Error()).To(Equal("OptionValue is required"))
 	})
 }
+
+func TestInvalidNegativeExtraPriceInput(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	t.Run("should fail validation for negative ExtraPrice", func(t *testing.T) {
+		menuOption := entity.MenuOptions{
+			OptionName:  "Extra Cheese",
+			OptionValue: "Cheese",
+			ExtraPrice:  -5.00,
+		}
+
+		ok, err := govalidator.ValidateStruct(menuOption)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("ExtraPrice must not be negative"))
+	})
+}

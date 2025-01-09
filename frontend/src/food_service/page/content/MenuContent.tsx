@@ -1,4 +1,3 @@
-import React from "react";
 import MenuList from "../menu_list/MenuList";
 import OrderList from "../order_list/OrderList";
 import "./MenuContent.css";

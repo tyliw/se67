@@ -24,7 +24,7 @@ const OrderItem: React.FC = () => {
   // คำนวณ subtotal ใหม่ทุกครั้งที่ selectMenuList เปลี่ยนแปลง
   useEffect(() => {
     const newSubtotal = filteredOrderDetails.reduce(
-      (total, item) => total + (item.Amount),
+      (total, item) => total + (item.Amount ?? 0),
       0
     );
     setSubtotal(newSubtotal);
@@ -96,7 +96,7 @@ const OrderItem: React.FC = () => {
                               );
                             })}
                           </td>
-                          <td>฿ {formatPriceWithoutDecimals(item.Amount)}</td>
+                          <td>฿ {formatPriceWithoutDecimals(item.Amount ?? 0)}</td>
                           <td>
                             <div className="order-item-quantity-control">
                               {item.Quantity === 1 ? (
@@ -116,7 +116,7 @@ const OrderItem: React.FC = () => {
                               <input
                                 className="order-item-quantity"
                                 name="order-item-quantity"
-                                value={formatPriceWithoutDecimals(item.Quantity)}
+                                value={formatPriceWithoutDecimals(item.Quantity ?? 0)}
                                 readOnly
                               />
                               <button

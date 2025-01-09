@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -6,6 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 // import { useOrder } from "../../../food_service/context/OrderContext";
 import "./TripCheckoutForm.css";
+import { StripePaymentElementOptions } from "@stripe/stripe-js";
 
 interface CheckoutFormProps {
   // total: number;
@@ -58,7 +59,7 @@ export default function TripCheckoutForm({ VAT }: CheckoutFormProps) {
     // navigate("/login/food-service/order/order-summary/checkout/complete", {state: { VAT: VAT }});
   };
 
-  const paymentElementOptions = {
+  const paymentElementOptions: StripePaymentElementOptions = {
     layout: "accordion",
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BookingCabinInterface } from "../../../booking_cabin/interface/IBookingCabin";
 import { message } from "antd";
 import { GetBookingCabinById } from "../../../booking_cabin/service/https/BookingCabinAPI";

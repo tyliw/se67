@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useStripe,
 } from "@stripe/react-stripe-js";
@@ -33,7 +33,7 @@ const InfoIcon =
     <path d="M5.75 4C5.75 3.31075 6.31075 2.75 7 2.75C7.68925 2.75 8.25 3.31075 8.25 4C8.25 4.68925 7.68925 5.25 7 5.25C6.31075 5.25 5.75 4.68925 5.75 4Z" fill="white"/>
   </svg>;
 
-const STATUS_CONTENT_MAP = {
+const STATUS_CONTENT_MAP: Record<string, { text: string; iconColor: string; icon: JSX.Element }> = {
   succeeded: {
     text: "Payment succeeded",
     iconColor: "#30B130",
@@ -53,9 +53,8 @@ const STATUS_CONTENT_MAP = {
     text: "Something went wrong, please try again.",
     iconColor: "#DF1B41",
     icon: ErrorIcon,
-  }
+  },
 };
-
 
 // const stripePromise = loadStripe("pk_test_51QOxoF4QmAAjQ0QzsimUKy0RcgMxNPvfbmCm6OJurQzEGULD1u2OfTSGfdd0OwpEW0tzpdkQvmQSZKvbq9waUceD00PaT9sjdJ");
 
@@ -69,8 +68,19 @@ export default function CompletePage()  {
   const [intentId, setIntentId] = useState(String);
   const [, setAmount] = useState(Number);
 
-  // const [isPaymentCreated, setIsPaymentCreated] = useState(false);
+  const [isFoodServicePaymentSaved, setIsFoodServicePaymentSaved] = useState<boolean>(() => {
+    // อ่านค่าจาก localStorage เป็นค่าเริ่มต้น
+    const saved = localStorage.getItem("isFoodServicePaymentSaved");
+    return saved === "true"; // ถ้าเป็น "true" ให้คืนค่า true, ถ้าไม่ใช่ให้คืนค่า false
+  });
 
+  useEffect(() => {
+    if (isFoodServicePaymentSaved) {
+      localStorage.setItem("isFoodServicePaymentSaved", "true");
+    } else {
+      localStorage.removeItem("isFoodServicePaymentSaved");
+    }
+  }, [isFoodServicePaymentSaved]);
 
   useEffect(() => {
     if (!stripe) return;
@@ -87,12 +97,11 @@ export default function CompletePage()  {
   
       // ป้องกันการสร้างข้อมูลซ้ำ
       const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
-      if (hasAlreadyProcessed) {
-        
-        if (!localStorage.getItem("foodServicePaymentID")) {
-          setStatus("default")
-        }
+      if (!localStorage.getItem("foodServicePaymentID")) {
+        setStatus("default")
+      }
 
+      if (hasAlreadyProcessed) {
         console.log("Payment already processed, skipping...");
         return;
       }
@@ -111,7 +120,7 @@ export default function CompletePage()  {
           .catch((error) => console.error("Error retrieving payment method:", error));
       }
     });
-  }, [stripe, intentId, orderID, localStorage.getItem("foodServicePaymentID")]);
+  }, [stripe, intentId]);
   
   
 
@@ -141,8 +150,6 @@ export default function CompletePage()  {
       const resOrder = await UpdateOrderById(order_id, updateOrderData);
       if (resOrder.status === 200) {
         await funcUpdateTripPayment(resFood.data);
-        message.success("Success to create order.");
-        // setIsPaymentCreated(true); // ตั้งสถานะว่าเสร็จสมบูรณ์
       } else {
         message.error("Failed to create order.");
         return;
@@ -156,6 +163,7 @@ export default function CompletePage()  {
 
   const funcUpdateTripPayment = async (foodPayment: FoodServicePaymentInterface) => {
     if (!foodPayment.TripPaymentID) return;
+   
     
     // get trip payment
     const resTrip = await GetTripPaymentById(foodPayment.TripPaymentID);
@@ -164,13 +172,15 @@ export default function CompletePage()  {
       // update trip payment
       const updateTripPaymentData: TripPaymentInterface = {
         TotalPrice: resTrip.data.TotalPrice + foodPayment.Price,
-        VAT: resTrip.data.VAT + foodPayment.VAT,
+        TotalVAT: resTrip.data.TotalVAT + foodPayment.VAT,
       };
-
+      console.log("funcUpdateTripPayment updateTripPaymentData", updateTripPaymentData)
       const resUpdateTrip = await UpdateTripPaymentById(resTrip.data.ID, updateTripPaymentData);
       if (resUpdateTrip.status === 200) {
         // Store resFood in localStorage
         localStorage.setItem("foodServicePaymentID", JSON.stringify(foodPayment.ID));
+        setIsFoodServicePaymentSaved(true);
+        message.success("Success to create order.");
       } else {
         message.error("Failed to update trip payment.");
         return;
@@ -185,6 +195,7 @@ export default function CompletePage()  {
     // ลบค่าที่เกี่ยวข้องใน localStorage
     localStorage.removeItem("VATFood");
     localStorage.removeItem("foodServicePaymentID");
+    localStorage.removeItem("isFoodServicePaymentSaved");
   
     // ลบ processed_{paymentIntent.id}
     const clientSecret = new URLSearchParams(window.location.search).get("payment_intent_client_secret");
@@ -207,7 +218,7 @@ export default function CompletePage()  {
           {STATUS_CONTENT_MAP[status].icon}
         </div>
         <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
-        {intentId && status === "succeeded" && localStorage.getItem("foodServicePaymentID") && (
+        {intentId && status === "succeeded" && isFoodServicePaymentSaved  && (
           <div id="details-table">
             <section>
               <FoodReceipt />

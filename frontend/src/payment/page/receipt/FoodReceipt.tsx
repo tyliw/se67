@@ -180,7 +180,7 @@ const handleDownload = async () => {
         <div className="customer-detail">
           <span className="header">BILL TO</span>
           <div className="customer-info">
-            <span className="name">{customer?.FirstName} {customer?.LastName}</span>
+            <span className="name">{customer?.first_name} {customer?.last_name}</span>
             <span className="address">4312 Wood Road New York, NY 100031</span>
           </div>
         </div>
@@ -213,7 +213,7 @@ const handleDownload = async () => {
           {filteredOrderDetails.map((detail, index) => (
             <tr key={detail.ID}>
               <td className="menu-name">{index + 1}. {detail.Menu?.MenuName}</td>
-              <td className="quantity">{formatPriceWithTwoDecimals(detail.Quantity ?? 0)}</td>
+              <td className="quantity">{detail.Quantity}</td>
               <td className="unit-price">{formatPriceWithTwoDecimals((detail.Amount ?? 0) / (detail.Quantity ?? 0))}</td>
               <td className="amount">{formatPriceWithTwoDecimals(detail.Amount ?? 0)}</td>
             </tr>

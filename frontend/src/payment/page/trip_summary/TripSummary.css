@@ -25,12 +25,6 @@
   .header {
     color: var(--color-theme-main);
   }
-
-  p {
-    strong {
-      /* color: #155BC3; */
-    }
-  }
 }
 
 .cruise-trip {

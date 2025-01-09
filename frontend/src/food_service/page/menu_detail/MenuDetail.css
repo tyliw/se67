@@ -21,7 +21,7 @@
       /* width: 44vw; */
       height: 50vh;
       /* scale: 0.2; */
-      border-radius: 8px;
+      border-radius: 4px;
       object-fit: cover;
     }
     .menu-detail-info {
@@ -52,7 +52,7 @@
     min-width: 460px;
     padding: 16px;
     /* gap: 16px; */
-    border-radius: 8px;
+    border-radius: 4px;
     border: 2px solid var(--color-border);
     box-shadow: var(--box-shadow-border);
 

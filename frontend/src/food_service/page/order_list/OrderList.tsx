@@ -69,7 +69,7 @@ const OrderList: React.FC = () => {
                             style={{ cursor: "pointer" }}
                           />
                         </td>
-                        <td className="quantity">x{formatPriceWithoutDecimals(item.Quantity)}</td>
+                        <td className="quantity">x{formatPriceWithoutDecimals(item.Quantity ?? 0)}</td>
                         <td className="menu">
                           <div className="menu-detail">
                             <p className="menu-name">{item.Menu?.MenuName ?? "Unknown"}</p>
@@ -91,7 +91,7 @@ const OrderList: React.FC = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="amount">฿ {formatPriceWithoutDecimals(item.Amount)}</td>
+                        <td className="amount">฿ {formatPriceWithoutDecimals(item.Amount ?? 0)}</td>
                       </tr>
                       // <div className="order-item" key={item.ID}>
                       //   <MdCancel

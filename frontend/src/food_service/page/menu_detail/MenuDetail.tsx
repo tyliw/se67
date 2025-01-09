@@ -5,7 +5,7 @@ import { message } from "antd";
 import { MenuItemOptionInterface } from "../../interface/IMenuItemOption";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Order, useOrder } from "../../context/OrderContext";
-import { Flex, Rate } from 'antd';
+// import { Flex, Rate } from 'antd';
 import { MdError } from "react-icons/md";
 import "./MenuDetail.css";
 
@@ -151,7 +151,7 @@ const MenuDetail: React.FC = () => {
           <div className="menu-detail">
             <img src={menuDetailSelect?.ImageMenu} alt={menuDetailSelect.MenuName} />
             <div className="menu-detail-info">
-              <h1 style={{ marginBottom: "4px", color: "black" }}>Description</h1>
+              <h1 >Description</h1>
               <hr />
               <div>
                 <p>{menuDetailSelect?.Description}</p>
@@ -163,9 +163,9 @@ const MenuDetail: React.FC = () => {
             <div className="menu-detail-content">
               <div className="header">
                 <h1>{menuDetailSelect?.MenuName}</h1>
-                <Flex gap="middle" vertical>
+                {/* <Flex gap="middle" vertical>
                   <Rate disabled defaultValue={4} />
-                </Flex>
+                </Flex> */}
               </div>
 
               <hr style={{ marginBottom: "16px" }} />

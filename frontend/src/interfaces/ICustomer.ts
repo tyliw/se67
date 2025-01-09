@@ -2,13 +2,15 @@ export interface CustomerInterface {
 
     ID?: number;
   
-    FirstName?: string;
+    first_name?: string;
   
-    LastName?: string;
+    last_name?: string;
   
-    Email?: string;
+    email?: string;
   
-    Phone?: string;
+    phone?: string;
+
+    Address?: string;
   
     Age?: number;
   

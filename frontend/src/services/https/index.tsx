@@ -1,4 +1,4 @@
-import { UsersInterface } from "../../interfaces/ICustomer";
+import { CustomerInterface } from "../../interfaces/ICustomer";
 
 import { SignInInterface } from "../../interfaces/SignIn";
 
@@ -63,7 +63,7 @@ async function GetUsersById(id: number) {
 }
 
 
-async function UpdateUsersById(id: number, data: UsersInterface) {
+async function UpdateUsersById(id: number, data: CustomerInterface) {
 
   return await axios
 
@@ -89,7 +89,7 @@ async function DeleteUsersById(id: number) {
 }
 
 
-async function CreateUser(data: UsersInterface) {
+async function CreateUser(data: CustomerInterface) {
 
   return await axios
 

@@ -86,3 +86,35 @@ func TestInvalidOrderDetailsInput(t *testing.T) {
 		g.Expect(err.Error()).To(ContainSubstring("OrderID is required"))
 	})
 }
+
+func TestInvalidNegativeQuantityAndAmount(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	t.Run("should fail validation for negative Quantity", func(t *testing.T) {
+		order_detail := entity.OrderDetails{
+			Quantity:   -1,
+			Amount:     250.00,
+			MenuID:     1,
+			OrderID:    1,
+		}
+
+		ok, err := govalidator.ValidateStruct(order_detail)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("Quantity must not be negative"))
+	})
+
+	t.Run("should fail validation for negative Amount", func(t *testing.T) {
+		order_detail := entity.OrderDetails{
+			Quantity:   2,
+			Amount:     -100.00,
+			MenuID:     1,
+			OrderID:    1,
+		}
+
+		ok, err := govalidator.ValidateStruct(order_detail)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("Amount must not be negative"))
+	})
+}

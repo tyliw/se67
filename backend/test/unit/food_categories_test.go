@@ -26,7 +26,7 @@ func TestValidFoodCategoriesInput(t *testing.T) {
 func TestInvalidFoodCategoriesInput(t *testing.T) {
 	g := NewGomegaWithT(t)
 
-	t.Run("should fail validation for missing Name", func(t *testing.T) {
+	t.Run("should fail validation for missing FoodCategoryName", func(t *testing.T) {
 		foodCategory := entity.FoodCategories{
 			FoodCategoryName:  "",
 			FoodCategoryImage: "http://example.com/image.png",
@@ -35,7 +35,7 @@ func TestInvalidFoodCategoriesInput(t *testing.T) {
 		ok, err := govalidator.ValidateStruct(foodCategory)
 		g.Expect(ok).To(BeFalse())
 		g.Expect(err).ToNot(BeNil())
-		g.Expect(err.Error()).To(Equal("Name is required"))
+		g.Expect(err.Error()).To(Equal("FoodCategoryName is required"))
 	})
 
 	t.Run("should fail validation for missing FoodCategoryImage", func(t *testing.T) {

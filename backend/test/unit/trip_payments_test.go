@@ -16,7 +16,7 @@ func TestValidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Now(),
 			TotalPrice:     1000.0,
-			VAT:            70.0, // Assuming 7% VAT
+			TotalVAT:            70.0, // Assuming 7% TotalVAT
 			PaymentStatus:  "Completed",
 			PaymentMethod:  "Credit Card",
 			BookingCabinID:	1,
@@ -31,7 +31,7 @@ func TestValidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Now(),
 			TotalPrice:     0.0,
-			VAT:            70.0,
+			TotalVAT:            70.0,
 			PaymentStatus:  "Completed",
 			PaymentMethod:  "Credit Card",
 			BookingCabinID:	1,
@@ -50,7 +50,7 @@ func TestInvalidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Time{},
 			TotalPrice:     1000.0,
-			VAT:            70.0, // Assuming 7% VAT
+			TotalVAT:       70.0, // Assuming 7% TotalVAT
 			PaymentStatus:  "Completed",
 			PaymentMethod:  "Credit Card",
 			BookingCabinID:	1,
@@ -66,7 +66,7 @@ func TestInvalidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Now(),
 			TotalPrice:     1000.0,
-			VAT:            70.0, // Assuming 7% VAT
+			TotalVAT:       70.0, // Assuming 7% VAT
 			PaymentStatus:  "",
 			PaymentMethod:  "Credit Card",
 			BookingCabinID:	1,
@@ -82,6 +82,7 @@ func TestInvalidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Now(),
 			TotalPrice:     5000.50,
+			TotalVAT:       70.0, // Assuming 7% VAT
 			PaymentStatus:  "Completed",
 			PaymentMethod:  "",
 			BookingCabinID: 1,
@@ -97,6 +98,7 @@ func TestInvalidTripPaymentInput(t *testing.T) {
 		tripPayment := entity.TripPayment{
 			PaymentDate:    time.Now(),
 			TotalPrice:     5000.50,
+			TotalVAT:       70.0, // Assuming 7% VAT
 			PaymentStatus:  "Completed",
 			PaymentMethod:  "Credit Card",
 			BookingCabinID: 0,
@@ -106,5 +108,45 @@ func TestInvalidTripPaymentInput(t *testing.T) {
 		g.Expect(ok).To(BeFalse())
 		g.Expect(err).ToNot(BeNil())
 		g.Expect(err.Error()).To(ContainSubstring("BookingCabinID is required"))
+	})
+}
+
+func TestInvalidNegativeTotalPrice(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	t.Run("should fail validation for negative TotalPrice", func(t *testing.T) {
+		tripPayment := entity.TripPayment{
+			PaymentDate:    time.Now(),
+			TotalPrice:     -5000.50,
+			TotalVAT:       70.0, // Assuming 7% VAT
+			PaymentStatus:  "Completed",
+			PaymentMethod:  "Credit Card",
+			BookingCabinID: 1,
+		}
+
+		ok, err := govalidator.ValidateStruct(tripPayment)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("TotalPrice must not be negative"))
+	})
+}
+
+func TestInvalidNegativeTotalVAT(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	t.Run("should fail validation for negative TotalVAT", func(t *testing.T) {
+		tripPayment := entity.TripPayment{
+			PaymentDate:    time.Now(),
+			TotalPrice:     5000.50,
+			TotalVAT:       -70.0, // Assuming 7% VAT
+			PaymentStatus:  "Completed",
+			PaymentMethod:  "Credit Card",
+			BookingCabinID: 1,
+		}
+
+		ok, err := govalidator.ValidateStruct(tripPayment)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("TotalVAT must not be negative"))
 	})
 }

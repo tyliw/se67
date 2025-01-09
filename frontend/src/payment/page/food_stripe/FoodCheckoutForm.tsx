@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -6,6 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useOrder } from "../../../food_service/context/OrderContext";
 import "./FoodCheckoutForm.css"
+import { StripePaymentElementOptions } from "@stripe/stripe-js";
 
 
 interface CheckoutFormProps {
@@ -59,9 +60,9 @@ export default function FoodCheckoutForm({ dpmCheckerLink, total, VAT }: Checkou
     // navigate("/login/food-service/order/order-summary/checkout/complete", {state: { VAT: VAT }});
   };
 
-  const paymentElementOptions = {
+  const paymentElementOptions: StripePaymentElementOptions = {
     layout: "accordion",
-  }
+  };
 
   useEffect(() => {
     localStorage.setItem("VATFood", VAT.toString())
@@ -93,9 +94,9 @@ export default function FoodCheckoutForm({ dpmCheckerLink, total, VAT }: Checkou
                       return (
                         <tr key={item.ID}>
                           <td className="menu-name">{item.Menu?.MenuName}</td>
-                          <td className="quantity">{formatPriceWithTwoDecimals(item.Quantity)}</td>
-                          <td className="unit-price">{formatPriceWithTwoDecimals(item.Amount / item.Quantity)}</td>
-                          <td className="amount">{formatPriceWithTwoDecimals(item.Amount)}</td>
+                          <td className="quantity">{formatPriceWithTwoDecimals(item.Quantity ?? 0)}</td>
+                          <td className="unit-price">{formatPriceWithTwoDecimals((item.Amount ?? 0) / (item.Quantity ?? 0))}</td>
+                          <td className="amount">{formatPriceWithTwoDecimals(item.Amount ?? 0)}</td>
                         </tr>
                       )
                     })}

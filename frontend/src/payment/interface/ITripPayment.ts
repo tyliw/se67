@@ -4,7 +4,7 @@ export interface TripPaymentInterface {
     ID?: number;
     PaymentDate?: Date;
     TotalPrice?: number;
-    VAT?: number;
+    TotalVAT?: number;
     Status?: string;
     PaymentStatus?: string;
     PaymentMethod?: string;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useStripe,
 } from "@stripe/react-stripe-js";
@@ -10,7 +10,6 @@ import "./TripStripeCheckout.css";
 // import { OrderInterface } from "../../../food_service/interface/IOrder";
 // import { UpdateOrderById } from "../../../food_service/service/https/OrderAPI";
 // import FoodReceipt from "../receipt/FoodReceipt";
-import "./TripCompletePage.css"
 import { TripPaymentInterface } from "../../interface/ITripPayment";
 import { CreateTripPayment } from "../../service/https/TripPaymentAPI";
 import { BookingCabinInterface } from "../../../booking_cabin/interface/IBookingCabin";
@@ -19,6 +18,7 @@ import { message } from "antd";
 import { BookingTripInterface } from "../../../booking_cabin/interface/IBookingTrip";
 import { UpdateBookingTripById } from "../../../booking_cabin/service/https/BookingTripAPI";
 import TripReceipt from "../receipt/TripReceipt";
+import "./TripCompletePage.css"
 // import { GetTripPaymentIDForFoodPayment } from "../payment/service/https/TripPaymentAPI";
 // import { useLocation } from "react-router-dom";
 
@@ -39,7 +39,7 @@ const InfoIcon =
     <path d="M5.75 4C5.75 3.31075 6.31075 2.75 7 2.75C7.68925 2.75 8.25 3.31075 8.25 4C8.25 4.68925 7.68925 5.25 7 5.25C6.31075 5.25 5.75 4.68925 5.75 4Z" fill="white"/>
   </svg>;
 
-const STATUS_CONTENT_MAP = {
+const STATUS_CONTENT_MAP: Record<string, { text: string; iconColor: string; icon: JSX.Element }> = {
   succeeded: {
     text: "Payment succeeded",
     iconColor: "#30B130",
@@ -59,9 +59,8 @@ const STATUS_CONTENT_MAP = {
     text: "Something went wrong, please try again.",
     iconColor: "#DF1B41",
     icon: ErrorIcon,
-  }
+  },
 };
-
 
 // const stripePromise = loadStripe("pk_test_51QOxoF4QmAAjQ0QzsimUKy0RcgMxNPvfbmCm6OJurQzEGULD1u2OfTSGfdd0OwpEW0tzpdkQvmQSZKvbq9waUceD00PaT9sjdJ");
 
@@ -101,6 +100,9 @@ export default function TripCompletePage()  {
       const BookingCabinIDData= localStorage.getItem("BookingCabinID");
       const BookingTripIDData= localStorage.getItem("BookingTripID");
 
+      if (!localStorage.getItem("TripPaymentID")) {
+        setStatus("default")
+      }
       if (VATData && BookingCabinIDData && BookingTripIDData) {
         const parsedVATData = JSON.parse(VATData);
         const parsedBookingCabinIDData = JSON.parse(BookingCabinIDData);
@@ -123,9 +125,6 @@ export default function TripCompletePage()  {
           // ป้องกันการสร้างข้อมูลซ้ำ
           const hasAlreadyProcessed = localStorage.getItem(`processed_${paymentIntent.id}`);
           if (hasAlreadyProcessed) {
-            if (!localStorage.getItem("TripPaymentID")) {
-              setStatus("default")
-            }
             console.log("Payment already processed, skipping...");
             return;
           }
@@ -154,7 +153,7 @@ export default function TripCompletePage()  {
     const tripPaymentData: TripPaymentInterface = {
       PaymentDate: new Date(),
       TotalPrice: price,
-      VAT: vat,
+      TotalVAT: vat,
       PaymentStatus: status,
       PaymentMethod: methodType,
       BookingCabinID: booking_cabin_id,
@@ -224,7 +223,7 @@ export default function TripCompletePage()  {
       localStorage.removeItem(`processed_${paymentIntentId}`);
     }
 
-    location.href="/trip-summary"
+    location.href="/"
 }
 
   return (

@@ -16,7 +16,7 @@ func TestValidOrdersInput(t *testing.T) {
 		order := entity.Orders{
 			OrderDate:   time.Now(),
 			TotalAmount: 500.00,
-			Status:      "Completed",
+			StatusID:      1,
 			CustomerID:  1,
 		}
 
@@ -33,7 +33,7 @@ func TestInvalidOrdersInput(t *testing.T) {
 		order := entity.Orders{
 			OrderDate:   time.Time{},// ไม่มีค่าที่ถูกตั้ง
 			TotalAmount: 500.00,
-			Status:      "Completed",
+			StatusID:     1,
 			CustomerID:  1,
 		}
 
@@ -47,7 +47,7 @@ func TestInvalidOrdersInput(t *testing.T) {
 		order := entity.Orders{
 			OrderDate:   time.Now(),
 			TotalAmount: 0.0,
-			Status:      "Completed",
+			StatusID:      1,
 			CustomerID:  1,
 		}
 
@@ -61,7 +61,7 @@ func TestInvalidOrdersInput(t *testing.T) {
 		order := entity.Orders{
 			OrderDate:   time.Now(),
 			TotalAmount: 500.00,
-			Status:      "Completed",
+			StatusID:      0,
 			CustomerID:  0,
 		}
 
@@ -69,5 +69,23 @@ func TestInvalidOrdersInput(t *testing.T) {
 		g.Expect(ok).To(BeFalse())
 		g.Expect(err).ToNot(BeNil())
 		g.Expect(err.Error()).To(ContainSubstring("CustomerID is required"))
+	})
+}
+
+func TestInvalidNegativeTotalAmount(t *testing.T) {
+	g := NewGomegaWithT(t)
+
+	t.Run("should fail validation for negative TotalAmount", func(t *testing.T) {
+		order := entity.Orders{
+			OrderDate:   time.Now(),
+			TotalAmount: -500.00,
+			StatusID:    1,
+			CustomerID:  1,
+		}
+
+		ok, err := govalidator.ValidateStruct(order)
+		g.Expect(ok).To(BeFalse())
+		g.Expect(err).ToNot(BeNil())
+		g.Expect(err.Error()).To(Equal("TotalAmount must not be negative"))
 	})
 }
